@@ -1,5 +1,5 @@
 import Card from "./Card";
-import { RefObject } from "react";
+import { MutableRefObject } from "react";
 
 type Props = {
   lane: {
@@ -12,7 +12,7 @@ type Props = {
   playerPower: number;
   enemyPower: number;
   result: "player1" | "player2" | "draw";
-  laneRef: RefObject<HTMLDivElement>;
+  laneRef: MutableRefObject<HTMLDivElement | null>;
 };
 
 export default function Lane({
@@ -26,7 +26,6 @@ export default function Lane({
 }: Props) {
   return (
     <div className="w-[110px] h-[320px] flex flex-col items-center">
-      {/* 🔴 ENEMY ZONE (FIXED HEIGHT) */}
       <div className="h-[110px] flex flex-col items-center justify-end">
         <div className="grid grid-cols-2 gap-[2px]">
           {enemyCards.map((c, i) => (
@@ -41,7 +40,6 @@ export default function Lane({
         </div>
       </div>
 
-      {/* 🏷️ LANE CENTER (ABSOLUTE FEEL) */}
       <div
         ref={laneRef}
         className="h-[50px] w-full flex flex-col items-center justify-center border rounded bg-white text-[10px]"
@@ -50,7 +48,6 @@ export default function Lane({
         <div className="text-gray-500 leading-tight">{lane.effect || "-"}</div>
       </div>
 
-      {/* 🔵 PLAYER ZONE (FIXED HEIGHT) */}
       <div className="h-[110px] flex flex-col items-center justify-start">
         <div className="text-[10px] mt-[2px]">
           ({playerPower}) {result === "player1" ? "✓" : ""}
