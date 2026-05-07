@@ -7,7 +7,7 @@ import Lane from "./Lane";
 import { getLanePower, getWinner, getLaneWinner } from "@/engine/actions";
 
 export default function Board() {
-  const { state, playCard, endTurn } = useGameStore();
+  const { state, playCard, endTurn, restartGame } = useGameStore();
 
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const [touchPos, setTouchPos] = useState({ x: 0, y: 0 });
@@ -118,6 +118,30 @@ export default function Board() {
           End Turn
         </button>
       </div>
+
+      {/* GAME END OVERLAY */}
+      {state.phase === "end" && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 flex flex-col items-center shadow-xl">
+            <div className="text-xl font-bold mb-2">Game Over</div>
+
+            <div className="text-sm text-gray-600 mb-4">
+              {getWinner(state) === "draw"
+                ? "It's a Draw!"
+                : getWinner(state) === "player1"
+                  ? "You Win!"
+                  : "You Lose!"}
+            </div>
+
+            <button
+              onClick={restartGame}
+              className="px-5 py-2 rounded-lg bg-blue-500 text-white text-sm font-semibold active:scale-95 transition"
+            >
+              Play Again
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* DRAG PREVIEW */}
       {draggingIndex !== null && (
