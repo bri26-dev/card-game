@@ -1,3 +1,5 @@
+import type { TouchEvent } from "react";
+
 type Props = {
   name: string;
   cost: number;
@@ -11,8 +13,8 @@ type Props = {
   selected?: boolean;
 
   onClick?: () => void;
-  onTouchStart?: (e: React.TouchEvent) => void;
-  onTouchMove?: (e: React.TouchEvent) => void;
+  onTouchStart?: (e: TouchEvent) => void;
+  onTouchMove?: (e: TouchEvent) => void;
   onTouchEnd?: () => void;
 };
 
