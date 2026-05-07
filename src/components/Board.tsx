@@ -1,8 +1,11 @@
+// components/Board.tsx
+
 "use client";
 
 import { useState, useRef } from "react";
 import { useGameStore } from "@/store/gameStore";
 import Card from "./Card";
+import CardModal from "./CardModal";
 import Lane from "./Lane";
 import { getLanePower, getWinner, getLaneWinner } from "@/engine/actions";
 
@@ -10,6 +13,7 @@ export default function Board() {
   const { state, playCard, endTurn, restartGame } = useGameStore();
 
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
+  const [selectedCard, setSelectedCard] = useState<any>(null);
   const [touchPos, setTouchPos] = useState({ x: 0, y: 0 });
 
   const laneRefs = {
@@ -78,6 +82,7 @@ export default function Board() {
                 enemyPower={enemyPower}
                 result={result}
                 laneRef={laneRefs[lane.id]}
+                onCardClick={setSelectedCard}
               />
             );
           })}
@@ -85,18 +90,65 @@ export default function Board() {
       </div>
 
       {/* HAND */}
+      {/* HAND */}
       <div className="flex gap-1 overflow-x-auto p-2 border-t bg-white">
         {player.hand.map((card, index) => (
           <div key={index} className="scale-90">
             <Card
               {...card}
               selected={draggingIndex === index}
-              onTouchStart={() => setDraggingIndex(index)}
+              onTouchStart={(e) => {
+                const touch = e.touches[0];
+
+                setDraggingIndex(index);
+
+                setTouchPos({
+                  x: touch.clientX,
+                  y: touch.clientY,
+                });
+              }}
               onTouchMove={(e) => {
                 const touch = e.touches[0];
-                setTouchPos({ x: touch.clientX, y: touch.clientY });
+
+                setTouchPos({
+                  x: touch.clientX,
+                  y: touch.clientY,
+                });
               }}
-              onTouchEnd={handleDrop}
+              onTouchEnd={() => {
+                if (draggingIndex === null) return;
+
+                const startX = touchPos.x;
+                const startY = touchPos.y;
+
+                let dropped = false;
+
+                for (const lane of lanes) {
+                  const rect =
+                    laneRefs[lane.id].current?.getBoundingClientRect();
+
+                  if (!rect) continue;
+
+                  const inside =
+                    touchPos.x >= rect.left &&
+                    touchPos.x <= rect.right &&
+                    touchPos.y >= rect.top &&
+                    touchPos.y <= rect.bottom;
+
+                  if (inside) {
+                    playCard("player1", draggingIndex, lane.id);
+                    dropped = true;
+                    break;
+                  }
+                }
+
+                // if not dropped -> treat as tap
+                if (!dropped) {
+                  setSelectedCard(card);
+                }
+
+                setDraggingIndex(null);
+              }}
             />
           </div>
         ))}
@@ -119,10 +171,25 @@ export default function Board() {
         </button>
       </div>
 
+      {state.phase === "postResolve" && (
+        <button
+          onClick={() => {
+            state.phase = "end";
+
+            useGameStore.setState({
+              state: { ...state },
+            });
+          }}
+          className="flex-1 py-2 rounded bg-green-500 text-white text-sm"
+        >
+          Continue
+        </button>
+      )}
+
       {/* GAME END OVERLAY */}
       {state.phase === "end" && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 flex flex-col items-center shadow-xl">
+        <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
+          <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 flex flex-col items-center shadow-xl pointer-events-auto">
             <div className="text-xl font-bold mb-2">Game Over</div>
 
             <div className="text-sm text-gray-600 mb-4">
@@ -142,19 +209,8 @@ export default function Board() {
           </div>
         </div>
       )}
-
-      {/* DRAG PREVIEW */}
-      {draggingIndex !== null && (
-        <div
-          className="fixed pointer-events-none"
-          style={{
-            left: touchPos.x - 25,
-            top: touchPos.y - 40,
-            transform: "scale(0.8)",
-          }}
-        >
-          <Card {...player.hand[draggingIndex]} />
-        </div>
+      {selectedCard && (
+        <CardModal card={selectedCard} onClose={() => setSelectedCard(null)} />
       )}
     </div>
   );

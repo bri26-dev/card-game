@@ -1,17 +1,26 @@
+// engine/gameState.ts
+
 import { GameState, Player, Card, Lane, LaneKey } from "./types";
 import { lanePool } from "../data/lanes";
 
 function createPlayer(id: "player1" | "player2", deck: Card[]): Player {
   return {
     id,
+
     deck,
+
     hand: [],
+
     board: {
       lane1: [],
       lane2: [],
       lane3: [],
     },
+
     energy: 0,
+
+    // NEW
+    bonusEnergy: 0,
   };
 }
 
@@ -22,7 +31,8 @@ function getRandomLanes(): Lane[] {
     id: laneKey,
     name: shuffled[i].name,
     effect: shuffled[i].effect,
-    revealed: i === 0, // only first revealed
+    trigger: shuffled[i].trigger, // ✅ IMPORTANT
+    revealed: i === 0,
   }));
 }
 

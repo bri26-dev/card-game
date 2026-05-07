@@ -1,3 +1,5 @@
+// engine/actions.ts
+
 import { GameState, LaneKey } from "./types";
 import { applyCardEffect } from "./effects";
 
@@ -12,10 +14,13 @@ export function drawCard(state: GameState, playerId: "player1" | "player2") {
 }
 
 export function startTurn(state: GameState) {
-  const turnEnergy = state.turn;
+  state.players.player1.energy = state.turn + state.players.player1.bonusEnergy;
 
-  state.players.player1.energy = turnEnergy;
-  state.players.player2.energy = turnEnergy;
+  state.players.player2.energy = state.turn + state.players.player2.bonusEnergy;
+
+  // consume bonus
+  state.players.player1.bonusEnergy = 0;
+  state.players.player2.bonusEnergy = 0;
 
   drawCard(state, "player1");
   drawCard(state, "player2");
@@ -28,25 +33,35 @@ export function playCard(
   lane: LaneKey,
 ) {
   const player = state.players[playerId];
+
   const card = player.hand[cardIndex];
 
   if (!card) return;
+
   if (card.cost > player.energy) return;
+
   if (player.board[lane].length >= 4) return;
 
+  // spend energy
   player.energy -= card.cost;
-  player.hand.splice(cardIndex, 1);
-  player.board[lane].push(card);
 
-  // ✨ TRIGGER EFFECT
-  if (card.effect === "onPlay") {
-    applyCardEffect(state, playerId, card, lane);
-  }
+  // remove from hand
+  player.hand.splice(cardIndex, 1);
+
+  // ADD FACE DOWN
+  player.board[lane].push({
+    ...card,
+
+    queued: true,
+    revealed: false,
+  });
 }
 
 // 🔢 lane power
 export function getLanePower(cards: any[]) {
-  return cards.reduce((sum, c) => sum + c.power, 0);
+  return cards.reduce((sum, c) => {
+    return sum + (c.basePower + (c.modifier ?? 0));
+  }, 0);
 }
 
 // 🏆 total

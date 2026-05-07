@@ -8,9 +8,9 @@ export function applyCardEffect(
   lane: LaneKey,
 ) {
   const player = state.players[playerId];
+
   const enemy = state.players[playerId === "player1" ? "player2" : "player1"];
 
-  // ❗ ignore cards with no ability
   if (!card.ability) return;
 
   switch (card.ability) {
@@ -18,32 +18,30 @@ export function applyCardEffect(
       drawCard(state, playerId);
       break;
 
+    case "self_buff":
+      card.modifier += 2;
+      break;
+
     case "boost_lane":
-      // ✅ only THIS lane, only your cards
       player.board[lane].forEach((c) => {
-        if (c.id !== card.id) c.power += 1;
+        if (c.id !== card.id) c.modifier += 1;
       });
       break;
 
     case "weaken_enemy":
       enemy.board[lane].forEach((c) => {
-        c.power = Math.max(0, c.power - 1);
+        c.modifier -= 1;
       });
       break;
 
     case "global_weaken":
-      // 🔥 future card (witch)
       Object.values(enemy.board).forEach((laneCards) => {
-        laneCards.forEach((c) => (c.power -= 1));
-      });
-
-      Object.values(player.board).forEach((laneCards) => {
-        laneCards.forEach((c) => (c.power -= 1));
+        laneCards.forEach((c) => (c.modifier -= 1));
       });
       break;
 
     case "gain_energy":
-      player.energy += 1;
+      player.bonusEnergy += 1;
       break;
   }
 }

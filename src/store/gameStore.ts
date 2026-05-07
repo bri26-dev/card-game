@@ -1,3 +1,5 @@
+// store/gameStore.ts
+
 import { create } from "zustand";
 import { GameState } from "@/engine/types";
 import { createGameState } from "@/engine/gameState";
@@ -9,7 +11,9 @@ import {
 import { starterCards } from "@/data/cards";
 import { runAI } from "@/engine/ai";
 import { shuffle } from "@/engine/shuffle";
-import { applyLaneEffects } from "@/engine/laneEffects";
+import { applyLaneEffects, resetCardStates } from "@/engine/laneEffects";
+import { revealCards } from "@/engine/reveal";
+import { recalculatePower } from "@/engine/power";
 
 interface GameStore {
   state: GameState | null;
@@ -27,8 +31,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
   history: [],
 
   initGame: () => {
-    const deck1 = shuffle(starterCards.map((c) => ({ ...c })));
-    const deck2 = shuffle(starterCards.map((c) => ({ ...c })));
+    const deck1 = shuffle(structuredClone(starterCards));
+
+    const deck2 = shuffle(structuredClone(starterCards));
 
     const state = createGameState(deck1, deck2);
 
@@ -88,33 +93,75 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     if (state.phase !== "player") return;
 
-    // move to enemy phase
+    // =========================
+    // ENEMY TURN
+    // =========================
     state.phase = "enemy";
 
-    // 🤖 AI PLAYS
     runAI(state);
 
-    // move to resolve
+    // =========================
+    // RESOLVE
+    // =========================
     state.phase = "resolve";
 
-    // (future effects go here)
-    applyLaneEffects(state);
+    resetCardStates(state);
 
-    // next turn
-    state.turn += 1;
+    revealCards(state);
 
-    // 🎴 reveal lanes progressively
-    if (state.turn === 2) state.lanes[1].revealed = true;
-    if (state.turn === 3) state.lanes[2].revealed = true;
+    applyLaneEffects(state, "ongoing");
 
-    if (state.turn > state.maxTurns) {
-      state.phase = "end";
-    } else {
-      // 🔁 new turn begins
-      startTurn(state);
-      state.phase = "player";
+    applyLaneEffects(state, "eachTurn");
+
+    if (state.turn === 5) {
+      applyLaneEffects(state, "turn5");
     }
 
-    set({ state: { ...state }, history: [] });
+    recalculatePower(state);
+    // =========================
+    // END GAME
+    // =========================
+    if (state.turn >= state.maxTurns) {
+      applyLaneEffects(state, "endGame");
+
+      recalculatePower(state);
+
+      state.phase = "postResolve";
+
+      set({
+        state: { ...state },
+        history: [],
+      });
+
+      return;
+    }
+
+    // =========================
+    // NEXT TURN
+    // =========================
+    state.turn += 1;
+
+    // reveal lane 2
+    if (state.turn === 2) {
+      state.lanes[1].revealed = true;
+
+      applyLaneEffects(state, "onReveal");
+    }
+
+    // reveal lane 3
+    if (state.turn === 3) {
+      state.lanes[2].revealed = true;
+
+      applyLaneEffects(state, "onReveal");
+    }
+
+    startTurn(state);
+
+    state.phase = "player";
+
+    set({
+      state: { ...state },
+      history: [],
+    });
   },
 }));
