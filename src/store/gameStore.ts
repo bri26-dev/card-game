@@ -103,6 +103,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
     // next turn
     state.turn += 1;
 
+    // 🎴 reveal lanes progressively
+    if (state.turn === 2) state.lanes[1].revealed = true;
+    if (state.turn === 3) state.lanes[2].revealed = true;
+
     if (state.turn > state.maxTurns) {
       state.phase = "end";
     } else {

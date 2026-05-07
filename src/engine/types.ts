@@ -32,4 +32,5 @@ export interface Lane {
   id: LaneKey;
   name: string;
   effect?: string;
+  revealed: boolean; // 👈 NEW
 }

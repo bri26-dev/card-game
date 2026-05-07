@@ -1,18 +1,28 @@
 import Card from "./Card";
 import { MutableRefObject } from "react";
+import { Lane as LaneType } from "@/engine/types";
 
 type Props = {
-  lane: {
-    id: "lane1" | "lane2" | "lane3";
-    name: string;
-    effect?: string;
-  };
+  lane: LaneType;
   playerCards: any[];
   enemyCards: any[];
   playerPower: number;
   enemyPower: number;
   result: "player1" | "player2" | "draw";
   laneRef: MutableRefObject<HTMLDivElement | null>;
+};
+
+const getEffectText = (effect?: string) => {
+  switch (effect) {
+    case "boost_all":
+      return "+1 Power to cards here";
+    case "weaken_all":
+      return "-1 Power to cards here";
+    case "draw_bonus":
+      return "Leader gains +1 Energy";
+    default:
+      return "No effect";
+  }
 };
 
 export default function Lane({
@@ -44,8 +54,16 @@ export default function Lane({
         ref={laneRef}
         className="h-[50px] w-full flex flex-col items-center justify-center border rounded bg-white text-[10px]"
       >
-        <div className="font-semibold leading-tight">{lane.name}</div>
-        <div className="text-gray-500 leading-tight">{lane.effect || "-"}</div>
+        {lane.revealed ? (
+          <>
+            <div className="font-semibold leading-tight">{lane.name}</div>
+            <div className="text-[8px] text-gray-500 leading-tight">
+              {getEffectText(lane.effect)}
+            </div>
+          </>
+        ) : (
+          <div className="text-[9px] text-gray-400 italic">Hidden Location</div>
+        )}
       </div>
 
       <div className="h-[110px] flex flex-col items-center justify-start">
