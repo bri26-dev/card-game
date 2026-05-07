@@ -3,6 +3,7 @@
 import Card from "./Card";
 import { MutableRefObject } from "react";
 import { Lane as LaneType } from "@/engine/types";
+import { getEffectText } from "@/engine/laneEffects";
 
 type Props = {
   lane: LaneType;
@@ -14,36 +15,7 @@ type Props = {
   laneRef: MutableRefObject<HTMLDivElement | null>;
 
   onCardClick: (card: any) => void;
-};
-
-const getEffectText = (effect?: string) => {
-  switch (effect) {
-    // ===== ONGOING =====
-    case "boost_all":
-      return "Cards here have +1 Power";
-
-    case "weaken_all":
-      return "Cards here have -1 Power";
-
-    // ===== EACH TURN =====
-    case "draw_bonus":
-      return "Winning here gives +1 Energy next turn";
-
-    // ===== TURN 5 =====
-    case "power_if_winning":
-      return "Turn 5: Winning side gains +1 Power";
-
-    // ===== ON REVEAL =====
-    case "reveal_buff":
-      return "When revealed, cards here gain +1 Power";
-
-    // ===== END GAME =====
-    case "final_power":
-      return "End Game: Cards here gain +2 Power";
-
-    default:
-      return "No special effect";
-  }
+  onLaneClick: (lane: any) => void;
 };
 
 export default function Lane({
@@ -55,6 +27,7 @@ export default function Lane({
   result,
   laneRef,
   onCardClick,
+  onLaneClick,
 }: Props) {
   return (
     <div className="w-[110px] h-[320px] flex flex-col items-center">
@@ -78,6 +51,7 @@ export default function Lane({
 
       <div
         ref={laneRef}
+        onClick={() => onLaneClick(lane)}
         className={`
     h-[60px] w-full flex flex-col items-center justify-center
     border rounded text-[10px] transition-all
@@ -111,7 +85,7 @@ export default function Lane({
         <div className="grid grid-cols-2 gap-[2px]">
           {playerCards.map((c, i) => (
             <div key={i} className="scale-[0.5]">
-              <Card {...c} />
+              <Card {...c} onClick={() => onCardClick(c)} />
             </div>
           ))}
         </div>

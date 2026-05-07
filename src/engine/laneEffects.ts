@@ -63,3 +63,28 @@ export function applyLaneEffects(
     }
   }
 }
+
+export const getEffectText = (effect?: string) => {
+  switch (effect) {
+    case "boost_all":
+      return "Cards here have +1 Power";
+
+    case "weaken_all":
+      return "Cards here have -1 Power";
+
+    case "draw_bonus":
+      return "Winning here gives +1 Energy next turn";
+
+    case "power_if_winning":
+      return "Turn 5: Winning side gains +1 Power";
+
+    case "reveal_buff":
+      return "When revealed, cards here gain +1 Power";
+
+    case "final_power":
+      return "End Game: Cards here gain +2 Power";
+
+    default:
+      return "No special effect";
+  }
+};

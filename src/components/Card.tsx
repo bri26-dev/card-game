@@ -46,15 +46,13 @@ export default function Card({
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
       className={`
-        w-16 h-24 rounded-xl border bg-white p-1 shadow-sm
+        w-14 h-20 rounded-xl border bg-white p-1 shadow-sm
         ${selected ? "scale-105" : ""}
         ${queued ? "border-blue-400" : "border-zinc-300"}
       `}
     >
       {!revealed && queued ? (
-        <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-blue-500">
-          QUEUED
-        </div>
+        <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-blue-500"></div>
       ) : (
         <>
           <div className="flex justify-between text-xs font-bold">
