@@ -2,7 +2,7 @@ import { GameState } from "./types";
 import { applyCardEffect } from "./effects";
 
 export function revealCards(state: GameState) {
-  const order =
+  const order: ("player1" | "player2")[] =
     state.priorityPlayer === "player1"
       ? ["player1", "player2"]
       : ["player2", "player1"];

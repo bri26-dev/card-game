@@ -15,7 +15,7 @@ type Props = {
   onClick?: () => void;
   onTouchStart?: (e: TouchEvent) => void;
   onTouchMove?: (e: TouchEvent) => void;
-  onTouchEnd?: () => void;
+  onTouchEnd?: (e: TouchEvent) => void;
 };
 
 export default function Card({

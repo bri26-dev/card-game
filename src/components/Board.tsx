@@ -91,110 +91,93 @@ export default function Board() {
 
       {/* HAND */}
       <div className="flex gap-1 overflow-x-auto p-2 border-t bg-white">
-        {player.hand.map((card, index) => {
-          let holdTimer: ReturnType<typeof setTimeout>;
+        {player.hand.map((card, index) => (
+          <div
+            key={index}
+            className={`
+        scale-90 transition-all duration-150
+        ${draggingIndex === index ? "scale-110 opacity-70" : ""}
+      `}
+          >
+            <Card
+              {...card}
+              selected={draggingIndex === index}
+              onTouchStart={(e) => {
+                const touch = e.touches[0];
 
-          let isDragging = false;
+                setTouchPos({
+                  x: touch.clientX,
+                  y: touch.clientY,
+                });
 
-          let startX = 0;
-          let startY = 0;
+                // store starting point
+                (e.currentTarget as any).startX = touch.clientX;
+                (e.currentTarget as any).startY = touch.clientY;
+              }}
+              onTouchMove={(e) => {
+                const touch = e.touches[0];
 
-          return (
-            <div
-              key={index}
-              className={`
-          scale-90 transition-transform
-          ${draggingIndex === index ? "scale-105 opacity-70" : ""}
-        `}
-            >
-              <Card
-                {...card}
-                onTouchStart={(e) => {
-                  const touch = e.touches[0];
+                setTouchPos({
+                  x: touch.clientX,
+                  y: touch.clientY,
+                });
 
-                  startX = touch.clientX;
-                  startY = touch.clientY;
+                const startX = (e.currentTarget as any).startX;
+                const startY = (e.currentTarget as any).startY;
 
-                  setTouchPos({
-                    x: touch.clientX,
-                    y: touch.clientY,
-                  });
+                const dx = Math.abs(touch.clientX - startX);
+                const dy = Math.abs(touch.clientY - startY);
 
-                  // HOLD activates drag mode
-                  holdTimer = setTimeout(() => {
-                    isDragging = true;
+                // if moved enough -> dragging
+                if (dx > 20 || dy > 20) {
+                  setDraggingIndex(index);
+                }
+              }}
+              onTouchEnd={(e) => {
+                // =====================
+                // TAP = VIEW CARD
+                // =====================
+                if (draggingIndex === null) {
+                  setSelectedCard(card);
+                  return;
+                }
 
-                    setDraggingIndex(index);
-                  }, 200);
-                }}
-                onTouchMove={(e) => {
-                  const touch = e.touches[0];
+                // =====================
+                // DRAG = PLAY CARD
+                // =====================
+                let played = false;
 
-                  setTouchPos({
-                    x: touch.clientX,
-                    y: touch.clientY,
-                  });
+                for (const lane of lanes) {
+                  const rect =
+                    laneRefs[lane.id].current?.getBoundingClientRect();
 
-                  // if finger moved too much BEFORE hold
-                  // cancel drag activation
-                  const moveX = Math.abs(touch.clientX - startX);
-                  const moveY = Math.abs(touch.clientY - startY);
+                  if (!rect) continue;
 
-                  if (!isDragging && (moveX > 10 || moveY > 10)) {
-                    clearTimeout(holdTimer);
+                  const inside =
+                    touchPos.x >= rect.left &&
+                    touchPos.x <= rect.right &&
+                    touchPos.y >= rect.top &&
+                    touchPos.y <= rect.bottom;
+
+                  if (inside) {
+                    playCard("player1", index, lane.id);
+
+                    played = true;
+
+                    break;
                   }
-                }}
-                onTouchEnd={() => {
-                  clearTimeout(holdTimer);
+                }
 
-                  // =====================
-                  // TAP = VIEW CARD
-                  // =====================
-                  if (!isDragging) {
-                    setSelectedCard(card);
+                setDraggingIndex(null);
 
-                    setDraggingIndex(null);
-
-                    return;
-                  }
-
-                  // =====================
-                  // DRAG DROP = PLAY CARD
-                  // =====================
-                  let dropped = false;
-
-                  for (const lane of lanes) {
-                    const rect =
-                      laneRefs[lane.id].current?.getBoundingClientRect();
-
-                    if (!rect) continue;
-
-                    const inside =
-                      touchPos.x >= rect.left &&
-                      touchPos.x <= rect.right &&
-                      touchPos.y >= rect.top &&
-                      touchPos.y <= rect.bottom;
-
-                    if (inside) {
-                      playCard("player1", index, lane.id);
-
-                      dropped = true;
-
-                      break;
-                    }
-                  }
-
-                  // optional cancel feedback
-                  if (!dropped) {
-                    console.log("Cancelled play");
-                  }
-
-                  setDraggingIndex(null);
-                }}
-              />
-            </div>
-          );
-        })}
+                // prevent accidental modal after drag
+                if (played) {
+                  return;
+                }
+              }}
+            />
+          </div>
+        ))}
       </div>
 
       {/* BUTTONS */}
