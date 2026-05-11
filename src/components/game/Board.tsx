@@ -32,12 +32,23 @@ type PreviewLane = {
 };
 
 export default function Board() {
-  const { gameState, playCard, endTurn, restartGame, undoLastAction } =
-    useGameStore();
+  const {
+    gameState,
+    playCard,
+    moveCard,
+    endTurn,
+    restartGame,
+    undoLastAction,
+  } = useGameStore();
 
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
   const [selectedLane, setSelectedLane] = useState<PreviewLane | null>(null);
+
+  const [movingCard, setMovingCard] = useState<{
+    cardId: string;
+    fromLane: LaneKey;
+  } | null>(null);
 
   const [draggingCard, setDraggingCard] = useState<Card | null>(null);
 
@@ -112,6 +123,16 @@ export default function Board() {
     });
   };
 
+  const handleMoveCard = (
+    fromLane: LaneKey,
+    toLane: LaneKey,
+    cardId: string,
+  ) => {
+    moveCard("player1", fromLane, toLane, cardId);
+
+    setMovingCard(null);
+  };
+
   return (
     <div className="flex h-screen flex-col bg-zinc-100 text-black">
       <Header turn={gameState.turn} energy={player.energy} />
@@ -125,6 +146,9 @@ export default function Board() {
         getLaneWinner={getLaneWinner}
         onCardSelect={setSelectedCard}
         onLaneSelect={handleLaneSelect}
+        movingCard={movingCard}
+        onMoveCard={handleMoveCard}
+        onSelectMoveCard={setMovingCard}
       />
 
       {gameState.currentPhase !== "end" && (

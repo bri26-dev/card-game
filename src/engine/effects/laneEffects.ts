@@ -127,9 +127,6 @@ export function getLaneEffectText(effect?: LaneEffect) {
     case "first_to_fill_draw":
       return "First player to fill this location draws a card.";
 
-    case "move_into_lane":
-      return "Turn 5: Players may move one card here from another location.";
-
     case "winner_destroy_random":
       return "Turn 5: The winning side destroys a random enemy card here.";
 

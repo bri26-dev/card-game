@@ -10,6 +10,7 @@ import { createGameState } from "@/engine/core/gameState";
 
 import {
   drawCard,
+  moveCard as moveCardAction,
   playCard as playCardAction,
   startTurn,
 } from "@/engine/core/cardActions";
@@ -31,6 +32,13 @@ interface GameStore {
     playerId: PlayerId,
     handIndex: number,
     targetLane: LaneKey,
+  ) => void;
+
+  moveCard: (
+    playerId: PlayerId,
+    fromLane: LaneKey,
+    toLane: LaneKey,
+    cardId: string,
   ) => void;
 
   endTurn: () => void;
@@ -86,6 +94,30 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const nextState = structuredClone(gameState);
 
     playCardAction(nextState, playerId, handIndex, targetLane);
+
+    set({
+      gameState: nextState,
+      history: [...history, snapshot],
+    });
+  },
+
+  moveCard: (playerId, fromLane, toLane, cardId) => {
+    const { gameState, history } = get();
+
+    if (!gameState) return;
+
+    /**
+     * ONLY PLAYER PHASE
+     */
+    if (gameState.currentPhase !== "player") {
+      return;
+    }
+
+    const snapshot = structuredClone(gameState);
+
+    const nextState = structuredClone(gameState);
+
+    moveCardAction(nextState, playerId, fromLane, toLane, cardId);
 
     set({
       gameState: nextState,

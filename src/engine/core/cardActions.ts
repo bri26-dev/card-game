@@ -68,6 +68,67 @@ export function playCard(
   laneCards.push(newCard);
 }
 
+export function moveCard(
+  state: GameState,
+  playerId: PlayerId,
+  fromLane: LaneKey,
+  toLane: LaneKey,
+  cardId: string,
+) {
+  if (fromLane === toLane) {
+    return;
+  }
+
+  const player = state.players[playerId];
+
+  const sourceLane = player.board[fromLane];
+
+  const targetLane = player.board[toLane];
+
+  /**
+   * TARGET FULL
+   */
+  if (targetLane.length >= 4) {
+    return;
+  }
+
+  const card = sourceLane.find((c) => c.id === cardId);
+
+  if (!card) {
+    return;
+  }
+
+  /**
+   * ONLY MOVE CARDS
+   * WITH move_once
+   */
+  if (card.ability !== "move_once") {
+    return;
+  }
+
+  /**
+   * ALREADY MOVED
+   */
+  if (card.moved) {
+    return;
+  }
+
+  /**
+   * REMOVE FROM OLD
+   */
+  player.board[fromLane] = sourceLane.filter((c) => c.id !== cardId);
+
+  /**
+   * MARK MOVED
+   */
+  card.moved = true;
+
+  /**
+   * ADD TO NEW
+   */
+  targetLane.push(card);
+}
+
 export function getLanePower(cards: any[]) {
   return cards.reduce((totalPower, card) => {
     return totalPower + getCardPower(card);

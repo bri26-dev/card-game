@@ -48,15 +48,6 @@ export const lanePool: LaneTemplate[] = [
 
     trigger: "eachTurn",
   },
-
-  {
-    name: "Portal Gate",
-
-    effect: "move_into_lane",
-
-    trigger: "turn5",
-  },
-
   {
     name: "Execution Grounds",
 
