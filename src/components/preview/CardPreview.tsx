@@ -25,7 +25,7 @@ export default function CardPreview({ card, onClose }: Props) {
       <div
         onClick={(event) => event.stopPropagation()}
         className="
-          flex h-[31rem] w-52 flex-col overflow-hidden
+          flex h-[35%] w-52 flex-col overflow-hidden
           rounded-3xl border border-zinc-300
           bg-white shadow-2xl
         "
