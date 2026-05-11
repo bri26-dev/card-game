@@ -1,4 +1,43 @@
+export type PlayerId = "player1" | "player2";
+
 export type LaneKey = "lane1" | "lane2" | "lane3";
+
+export type TurnPhase =
+  | "start"
+  | "player"
+  | "enemy"
+  | "resolve"
+  | "postResolve"
+  | "end";
+
+export type CardTrigger = "onPlay" | "onReveal" | "ongoing" | null;
+
+export type CardAbility =
+  | "draw_card"
+  | "gain_energy"
+  | "solo_buff"
+  | "buff_allies"
+  | "buff_next_card"
+  | "debuff_enemy"
+  | "debuff_all_enemies"
+  | "destroy_enemy"
+  | "destroy_weakest_enemy"
+  | "move_once";
+
+export type LaneTrigger =
+  | "onReveal"
+  | "eachTurn"
+  | "turn5"
+  | "endGame"
+  | "ongoing";
+
+export type LaneEffect =
+  | "buff_all_cards"
+  | "debuff_all_cards"
+  | "winner_bonus_power"
+  | "first_to_fill_draw"
+  | "move_into_lane"
+  | "winner_destroy_random";
 
 export interface Card {
   id: string;
@@ -6,30 +45,28 @@ export interface Card {
 
   cost: number;
 
-  // BASE stats (never directly shown logic-wise)
   basePower: number;
-
-  // dynamic computed value
   power: number;
-
-  // temporary modifiers only
   modifier: number;
 
   revealed?: boolean;
   queued?: boolean;
 
-  effect?: "onPlay" | "onReveal" | "ongoing" | null;
-
-  ability?: string;
+  trigger?: CardTrigger;
+  ability?: CardAbility;
 
   description?: string;
 
   buffed?: boolean;
   debuffed?: boolean;
+
+  moved?: boolean;
+
+  nextCardBuffUsed?: boolean;
 }
 
 export interface Player {
-  id: "player1" | "player2";
+  id: PlayerId;
 
   deck: Card[];
   hand: Card[];
@@ -42,21 +79,23 @@ export interface Player {
 
 export interface Lane {
   id: LaneKey;
+
   name: string;
 
-  effect?: string;
-
-  trigger?: "onReveal" | "eachTurn" | "turn5" | "endGame" | "ongoing";
+  effect?: LaneEffect;
+  trigger?: LaneTrigger;
 
   revealed: boolean;
 }
 
 export interface GameState {
   turn: number;
-  priorityPlayer: "player1" | "player2";
-  phase: "start" | "player" | "enemy" | "resolve" | "postResolve" | "end";
 
-  players: Record<"player1" | "player2", Player>;
+  currentPhase: TurnPhase;
+
+  revealPriority: PlayerId;
+
+  players: Record<PlayerId, Player>;
 
   lanes: Lane[];
 

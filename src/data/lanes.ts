@@ -1,57 +1,67 @@
-// data/lanes.ts
+import { LaneEffect, LaneTrigger } from "@/engine/types";
 
 type LaneTemplate = {
   name: string;
 
-  effect?: string;
+  effect?: LaneEffect;
 
-  trigger?: "onReveal" | "eachTurn" | "turn5" | "endGame" | "ongoing";
+  trigger?: LaneTrigger;
 };
 
 export const lanePool: LaneTemplate[] = [
-  // ===== NO EFFECT =====
-  { name: "Plains" },
-  { name: "Village" },
-  { name: "Desert" },
-
-  // ===== ONGOING =====
   {
-    name: "Forest",
-    effect: "boost_all",
+    name: "Plains",
+  },
+
+  {
+    name: "Village",
+  },
+
+  {
+    name: "Training Grounds",
+
+    effect: "buff_all_cards",
+
     trigger: "ongoing",
   },
 
   {
-    name: "Ruins",
-    effect: "weaken_all",
+    name: "Swamp",
+
+    effect: "debuff_all_cards",
+
     trigger: "ongoing",
   },
 
-  // ===== EACH TURN =====
   {
-    name: "Sanctuary",
-    effect: "draw_bonus",
+    name: "Arena",
+
+    effect: "winner_bonus_power",
+
     trigger: "eachTurn",
   },
 
-  // ===== TURN 5 =====
   {
-    name: "Arena",
-    effect: "power_if_winning",
+    name: "Library",
+
+    effect: "first_to_fill_draw",
+
+    trigger: "eachTurn",
+  },
+
+  {
+    name: "Portal Gate",
+
+    effect: "move_into_lane",
+
     trigger: "turn5",
   },
 
-  // ===== ON REVEAL =====
   {
-    name: "Forge",
-    effect: "reveal_buff",
-    trigger: "onReveal",
-  },
+    name: "Execution Grounds",
 
-  // ===== END GAME =====
-  {
-    name: "Temple",
-    effect: "final_power",
-    trigger: "endGame",
+    effect: "winner_destroy_random",
+
+    trigger: "turn5",
   },
 ];

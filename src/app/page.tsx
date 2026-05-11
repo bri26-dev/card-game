@@ -4,13 +4,13 @@
 
 import { useEffect } from "react";
 import { useGameStore } from "@/store/gameStore";
-import Board from "@/components/Board";
+import Board from "@/components/game/Board";
 
 export default function Home() {
-  const { initGame } = useGameStore();
+  const { initializeGame } = useGameStore();
 
   useEffect(() => {
-    initGame();
+    initializeGame();
   }, []);
 
   return <Board />;

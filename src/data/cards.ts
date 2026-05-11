@@ -1,142 +1,201 @@
-import { Card } from "../engine/types";
+import { Card } from "@/engine/types";
 
-const makeCard = (card: Omit<Card, "basePower" | "modifier">): Card => ({
-  ...card,
-
-  basePower: card.power,
-
-  modifier: 0,
-});
+function createCard(cardData: Omit<Card, "basePower" | "modifier">): Card {
+  return {
+    ...cardData,
+    basePower: cardData.power,
+    modifier: 0,
+  };
+}
 
 export const starterCards: Card[] = [
-  makeCard({
+  /**
+   * VANILLA
+   */
+  createCard({
     id: "warrior_1",
     name: "Warrior",
+
     cost: 1,
     power: 2,
-    effect: null,
+
+    trigger: null,
+
     description: "No Ability.",
   }),
 
-  makeCard({
+  /**
+   * ENERGY
+   */
+  createCard({
     id: "rogue_1",
     name: "Rogue",
+
     cost: 1,
     power: 1,
-    effect: "onPlay",
+
+    trigger: "onReveal",
     ability: "gain_energy",
+
     description: "On Reveal: Gain +1 Energy next turn.",
   }),
 
-  makeCard({
+  /**
+   * DRAW
+   */
+  createCard({
     id: "scout_1",
     name: "Scout",
+
     cost: 2,
     power: 2,
-    effect: "onPlay",
-    ability: "draw",
+
+    trigger: "onReveal",
+    ability: "draw_card",
+
     description: "On Reveal: Draw a card.",
   }),
 
-  makeCard({
-    id: "hunter_1",
-    name: "Hunter",
-    cost: 2,
-    power: 3,
-    effect: null,
-    description: "No Ability.",
-  }),
-
-  makeCard({
-    id: "saboteur_1",
-    name: "Saboteur",
-    cost: 2,
-    power: 2,
-    effect: "onPlay",
-    ability: "weaken_enemy",
-    description: "On Reveal: Enemy cards here lose -1 Power.",
-  }),
-
-  makeCard({
-    id: "captain_1",
-    name: "Captain",
-    cost: 3,
-    power: 3,
-    effect: "onPlay",
-    ability: "boost_lane",
-    description: "On Reveal: Other friendly cards here gain +1 Power.",
-  }),
-
-  makeCard({
-    id: "mage_1",
-    name: "Mage",
-    cost: 3,
-    power: 4,
-    effect: null,
-    description: "No Ability.",
-  }),
-
-  makeCard({
-    id: "guardian_1",
-    name: "Guardian",
-    cost: 3,
-    power: 5,
-    effect: null,
-    description: "No Ability.",
-  }),
-
-  makeCard({
+  /**
+   * SOLO BUFF
+   */
+  createCard({
     id: "berserker_1",
     name: "Berserker",
-    cost: 4,
-    power: 6,
-    effect: null,
-    description: "No Ability.",
+
+    cost: 2,
+    power: 3,
+
+    trigger: "onReveal",
+    ability: "solo_buff",
+
+    description: "On Reveal: If this is your only card here, gain +2 Power.",
   }),
 
-  makeCard({
-    id: "witch_1",
-    name: "Witch",
+  /**
+   * LANE BUFF
+   */
+  createCard({
+    id: "captain_1",
+    name: "Captain",
+
+    cost: 3,
+    power: 3,
+
+    trigger: "onReveal",
+    ability: "buff_allies",
+
+    description: "On Reveal: Other allies here gain +1 Power.",
+  }),
+
+  /**
+   * NEXT CARD BUFF
+   */
+  createCard({
+    id: "bard_1",
+    name: "Bard",
+
+    cost: 2,
+    power: 2,
+
+    trigger: "ongoing",
+    ability: "buff_next_card",
+
+    description: "Your next card played here gains +2 Power.",
+  }),
+
+  /**
+   * RANDOM DEBUFF
+   */
+  createCard({
+    id: "assassin_1",
+    name: "Assassin",
+
+    cost: 3,
+    power: 2,
+
+    trigger: "onReveal",
+    ability: "debuff_enemy",
+
+    description: "On Reveal: Random enemy here gets -2 Power.",
+  }),
+
+  /**
+   * GLOBAL DEBUFF
+   */
+  createCard({
+    id: "warlock_1",
+    name: "Warlock",
+
+    cost: 5,
+    power: 4,
+
+    trigger: "onReveal",
+    ability: "debuff_all_enemies",
+
+    description: "On Reveal: All enemy cards get -1 Power.",
+  }),
+
+  /**
+   * DESTROY RANDOM
+   */
+  createCard({
+    id: "hunter_1",
+    name: "Hunter",
+
     cost: 4,
     power: 3,
-    effect: "onPlay",
-    ability: "global_weaken",
-    description: "On Reveal: All enemy cards lose 1 Power.",
+
+    trigger: "onReveal",
+    ability: "destroy_enemy",
+
+    description: "On Reveal: Destroy a random enemy here.",
   }),
 
-  makeCard({
-    id: "sniper_1",
-    name: "Sniper",
-    cost: 4,
-    power: 5,
-    effect: null,
-    description: "No Ability.",
-  }),
+  /**
+   * DESTROY WEAKEST
+   */
+  createCard({
+    id: "executioner_1",
+    name: "Executioner",
 
-  makeCard({
-    id: "paladin_1",
-    name: "Paladin",
     cost: 5,
-    power: 8,
-    effect: null,
-    description: "No Ability.",
+    power: 4,
+
+    trigger: "onReveal",
+    ability: "destroy_weakest_enemy",
+
+    description: "On Reveal: Destroy the weakest enemy here.",
   }),
 
-  makeCard({
-    id: "knight_1",
-    name: "Knight",
-    cost: 5,
-    power: 7,
-    effect: null,
-    description: "No Ability.",
+  /**
+   * MOVE
+   */
+  createCard({
+    id: "wanderer_1",
+    name: "Wanderer",
+
+    cost: 2,
+    power: 4,
+
+    trigger: null,
+    ability: "move_once",
+
+    description: "Can move once to another location.",
   }),
 
-  makeCard({
-    id: "tank_1",
-    name: "Tank",
+  /**
+   * BIG BODY
+   */
+  createCard({
+    id: "giant_1",
+    name: "Giant",
+
     cost: 6,
-    power: 10,
-    effect: null,
+    power: 8,
+
+    trigger: null,
+
     description: "No Ability.",
   }),
 ];

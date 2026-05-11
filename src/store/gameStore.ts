@@ -1,166 +1,174 @@
-// store/gameStore.ts
-
 import { create } from "zustand";
-import { GameState } from "@/engine/types";
-import { createGameState } from "@/engine/gameState";
-import {
-  startTurn,
-  playCard as playCardAction,
-  drawCard,
-} from "@/engine/actions";
+
+import { GameState, LaneKey, PlayerId } from "@/engine/types";
+
 import { starterCards } from "@/data/cards";
-import { runAI } from "@/engine/ai";
-import { shuffle } from "@/engine/shuffle";
-import { applyLaneEffects, resetCardStates } from "@/engine/laneEffects";
-import { revealCards } from "@/engine/reveal";
-import { recalculatePower } from "@/engine/power";
+
+import { shuffle } from "@/engine/utils/shuffle";
+
+import { createGameState } from "@/engine/core/gameState";
+
+import {
+  drawCard,
+  playCard as playCardAction,
+  startTurn,
+} from "@/engine/core/cardActions";
+
+import { applyLaneEffects } from "@/engine/effects/laneEffects";
+
+import { recalculatePower } from "@/engine/core/powerSystem";
+
+import { prepareNextTurn, resolveTurn } from "@/engine/core/gameFlow";
 
 interface GameStore {
-  state: GameState | null;
+  gameState: GameState | null;
+
   history: GameState[];
 
-  initGame: () => void;
-  playCard: (playerId: "player1" | "player2", index: number, lane: any) => void;
+  initializeGame: () => void;
+
+  playCard: (
+    playerId: PlayerId,
+    handIndex: number,
+    targetLane: LaneKey,
+  ) => void;
+
   endTurn: () => void;
-  undo: () => void;
+
+  undoLastAction: () => void;
+
   restartGame: () => void;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
-  state: null,
+  gameState: null,
+
   history: [],
 
-  initGame: () => {
-    const deck1 = shuffle(structuredClone(starterCards));
+  initializeGame: () => {
+    const playerOneDeck = shuffle(structuredClone(starterCards));
 
-    const deck2 = shuffle(structuredClone(starterCards));
+    const playerTwoDeck = shuffle(structuredClone(starterCards));
 
-    const state = createGameState(deck1, deck2);
+    const gameState = createGameState(playerOneDeck, playerTwoDeck);
 
-    for (let i = 0; i < 4; i++) {
-      drawCard(state, "player1");
-      drawCard(state, "player2");
+    /**
+     * STARTING HAND
+     */
+    for (let i = 0; i < 3; i++) {
+      drawCard(gameState, "player1");
+      drawCard(gameState, "player2");
     }
 
-    startTurn(state);
+    /**
+     * START TURN 1
+     */
+    startTurn(gameState);
 
-    state.phase = "player"; // ✅ IMPORTANT
-
-    set({ state, history: [] });
-  },
-
-  playCard: (playerId, index, lane) => {
-    const state = get().state;
-    const history = get().history;
-
-    if (!state) return;
-
-    // 🚫 block actions if game ended or not player phase
-    if (state.phase === "end" || state.phase !== "player") return;
-
-    // save snapshot
-    const snapshot = JSON.parse(JSON.stringify(state));
-    history.push(snapshot);
-
-    playCardAction(state, playerId, index, lane);
+    gameState.currentPhase = "player";
 
     set({
-      state: { ...state },
-      history: [...history],
+      gameState,
+      history: [],
+    });
+  },
+  playCard: (playerId, handIndex, targetLane) => {
+    const { gameState, history } = get();
+
+    if (!gameState) return;
+
+    if (gameState.currentPhase !== "player") {
+      return;
+    }
+
+    const snapshot = structuredClone(gameState);
+
+    const nextState = structuredClone(gameState);
+
+    playCardAction(nextState, playerId, handIndex, targetLane);
+
+    set({
+      gameState: nextState,
+      history: [...history, snapshot],
     });
   },
 
-  undo: () => {
-    const history = get().history;
+  undoLastAction: () => {
+    const { history } = get();
 
     if (history.length === 0) return;
 
-    const prev = history[history.length - 1];
+    const previousState = history[history.length - 1];
 
     set({
-      state: prev,
+      gameState: previousState,
+
       history: history.slice(0, -1),
     });
   },
 
   restartGame: () => {
-    get().initGame();
+    get().initializeGame();
   },
 
+  // store/gameStore.ts
+  // ONLY REPLACE THE endTurn FUNCTION
+
   endTurn: () => {
-    const state = get().state;
-    if (!state) return;
+    const { gameState } = get();
 
-    if (state.phase !== "player") return;
+    if (!gameState) return;
 
-    // =========================
-    // ENEMY TURN
-    // =========================
-    state.phase = "enemy";
-
-    runAI(state);
-
-    // =========================
-    // RESOLVE
-    // =========================
-    state.phase = "resolve";
-
-    resetCardStates(state);
-
-    revealCards(state);
-
-    applyLaneEffects(state, "ongoing");
-
-    applyLaneEffects(state, "eachTurn");
-
-    if (state.turn === 5) {
-      applyLaneEffects(state, "turn5");
+    if (gameState.currentPhase !== "player") {
+      return;
     }
 
-    recalculatePower(state);
-    // =========================
-    // END GAME
-    // =========================
-    if (state.turn >= state.maxTurns) {
-      applyLaneEffects(state, "endGame");
+    const nextState = structuredClone(gameState);
 
-      recalculatePower(state);
+    /**
+     * RESOLVE CURRENT TURN
+     */
+    resolveTurn(nextState);
 
-      state.phase = "postResolve";
+    /**
+     * IMPORTANT:
+     * KEEP BOARD VISIBLE
+     * AFTER TURN 6 RESOLUTION
+     */
+    const isFinalTurn = nextState.turn >= nextState.maxTurns;
+
+    if (isFinalTurn) {
+      /**
+       * ENDGAME LANE EFFECTS
+       */
+      applyLaneEffects(nextState, "endGame");
+
+      /**
+       * FINAL POWER RECALC
+       */
+      recalculatePower(nextState);
+
+      /**
+       * DO NOT INSTANTLY RESET
+       * JUST ENTER END STATE
+       */
+      nextState.currentPhase = "end";
 
       set({
-        state: { ...state },
+        gameState: nextState,
         history: [],
       });
 
       return;
     }
 
-    // =========================
-    // NEXT TURN
-    // =========================
-    state.turn += 1;
-
-    // reveal lane 2
-    if (state.turn === 2) {
-      state.lanes[1].revealed = true;
-
-      applyLaneEffects(state, "onReveal");
-    }
-
-    // reveal lane 3
-    if (state.turn === 3) {
-      state.lanes[2].revealed = true;
-
-      applyLaneEffects(state, "onReveal");
-    }
-
-    startTurn(state);
-
-    state.phase = "player";
+    /**
+     * NEXT TURN
+     */
+    prepareNextTurn(nextState);
 
     set({
-      state: { ...state },
+      gameState: nextState,
       history: [],
     });
   },
