@@ -1,9 +1,11 @@
 // components/game/GameLane.tsx
 
 import type { MutableRefObject } from "react";
+
 import type { Card, Lane, LaneKey } from "@/engine/types";
 
 import GameCard from "./GameCard";
+
 import { getLaneEffectText } from "@/engine/effects/laneEffects";
 
 type Props = {
@@ -20,9 +22,9 @@ type Props = {
   laneRef: MutableRefObject<HTMLDivElement | null>;
 
   onCardSelect: (card: Card) => void;
+
   onLaneSelect: (lane: Lane) => void;
 
-  // ✅ ADDED
   movingCard?: {
     cardId: string;
     fromLane: LaneKey;
@@ -52,19 +54,42 @@ export default function GameLane({
   onMoveCard,
   onSelectMoveCard,
 }: Props) {
-  const isMoveTarget = movingCard && movingCard.fromLane !== lane.id;
+  const isMoveTarget = movingCard !== null && movingCard?.fromLane !== lane.id;
+
+  /**
+   * MIRRORED ENEMY ORDER
+   *
+   * TOP LEFT     = 3rd card
+   * TOP RIGHT    = 4th card
+   * BOTTOM LEFT  = 1st card
+   * BOTTOM RIGHT = 2nd card
+   */
+
+  const enemySlots: (Card | null)[] = [
+    enemyCards[2] ?? null,
+    enemyCards[3] ?? null,
+    enemyCards[0] ?? null,
+    enemyCards[1] ?? null,
+  ];
 
   return (
     <div className="flex h-[320px] w-[110px] flex-col items-center">
       {/* ENEMY */}
       <div className="flex h-[110px] flex-col items-center justify-end">
         <div className="grid grid-cols-2 gap-[2px]">
-          {enemyCards.map((card) => (
-            <div key={card.id} className="scale-[0.5]">
-              {card.revealed ? (
-                <GameCard card={card} onClick={() => onCardSelect(card)} />
+          {enemySlots.map((card, index) => (
+            <div key={`enemy-${index}`} className="scale-[0.5]">
+              {card ? (
+                card.revealed ? (
+                  <GameCard card={card} onClick={() => onCardSelect(card)} />
+                ) : (
+                  <div className="h-24 w-16 rounded-xl border border-blue-400 bg-blue-900" />
+                )
               ) : (
-                <div className="h-24 w-16 rounded-xl border border-blue-400 bg-blue-900" />
+                // IMPORTANT:
+                // SAME SIZE AS GameCard
+                // so spacing/layout matches player perfectly
+                <div className="h-20 w-14 opacity-0" />
               )}
             </div>
           ))}
@@ -79,11 +104,11 @@ export default function GameLane({
       <div
         ref={laneRef}
         onClick={() => {
-          // ✅ MOVE LOGIC
           if (movingCard && onMoveCard) {
             onMoveCard(movingCard.fromLane, lane.id, movingCard.cardId);
 
             onSelectMoveCard?.(null);
+
             return;
           }
 
@@ -92,7 +117,7 @@ export default function GameLane({
         className={`
           flex h-[60px] w-full flex-col items-center
           justify-center rounded border text-[10px]
-          transition-all
+          transition-all duration-200
 
           ${
             result === "player1"
@@ -130,12 +155,12 @@ export default function GameLane({
               <GameCard
                 card={card}
                 onClick={() => {
-                  // ✅ START MOVE MODE
                   if (card.ability === "move_once" && !card.moved) {
                     onSelectMoveCard?.({
                       cardId: card.id,
                       fromLane: lane.id,
                     });
+
                     return;
                   }
 
