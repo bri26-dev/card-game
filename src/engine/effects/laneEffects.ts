@@ -1,4 +1,4 @@
-import { Card, GameState, LaneEffect, LaneTrigger } from "../types";
+import { Card, GameState, LaneTrigger } from "../types";
 
 import { getLaneWinner } from "../core/cardActions";
 
@@ -110,27 +110,5 @@ export function applyLaneEffects(state: GameState, trigger: LaneTrigger) {
         break;
       }
     }
-  }
-}
-
-export function getLaneEffectText(effect?: LaneEffect) {
-  switch (effect) {
-    case "buff_all_cards":
-      return "Cards here have +1 Power.";
-
-    case "debuff_all_cards":
-      return "Cards here have -1 Power.";
-
-    case "winner_bonus_power":
-      return "The winning side here gains +1 Power.";
-
-    case "first_to_fill_draw":
-      return "First player to fill this location draws a card.";
-
-    case "winner_destroy_random":
-      return "Turn 5: The winning side destroys a random enemy card here.";
-
-    default:
-      return "No special effect.";
   }
 }

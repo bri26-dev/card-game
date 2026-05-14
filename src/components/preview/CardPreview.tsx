@@ -1,11 +1,15 @@
 // components/preview/CardPreview.tsx
 
+import Image from "next/image";
+
 import type { Card } from "@/engine/types";
 
 import { getCardPower } from "@/engine/utils/card.utils";
 
 type Props = {
-  card: Card;
+  card: Card & {
+    image?: string;
+  };
 
   onClose: () => void;
 };
@@ -17,53 +21,124 @@ export default function CardPreview({ card, onClose }: Props) {
     <div
       onClick={onClose}
       className="
-        fixed inset-0 z-50
-        flex items-center justify-center
-        bg-black/70 p-4 backdrop-blur-sm
+        fixed
+        inset-0
+        z-[200]
+        flex
+        items-center
+        justify-center
+        bg-black/80
+        p-4
+        backdrop-blur-md
       "
     >
       <div
         onClick={(event) => event.stopPropagation()}
         className="
-          flex h-[35%] w-52 flex-col overflow-hidden
-          rounded-3xl border border-zinc-300
-          bg-white shadow-2xl
+          relative
+          h-[560px]
+          w-[360px]
+          overflow-hidden
+          rounded-[38px]
+          border
+          border-white/10
+          bg-[#101014]
+          shadow-[0_30px_80px_rgba(0,0,0,0.6)]
         "
       >
-        <div className="flex items-start justify-between p-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-500 text-lg font-bold text-white shadow">
-            {card.cost}
-          </div>
+        <Image
+          src={card.image || "/assets/cards/fallback.png"}
+          alt={card.name}
+          fill
+          className="object-cover pixelated"
+        />
 
+        <div
+          className="
+            absolute
+            inset-0
+            bg-gradient-to-b
+            from-black/10
+            via-black/20
+            to-black
+          "
+        />
+
+        <div
+          className="
+            absolute
+            left-4
+            top-4
+            flex
+            h-14
+            w-14
+            items-center
+            justify-center
+            rounded-full
+            bg-blue-500
+            text-2xl
+            font-black
+            text-white
+          "
+        >
+          {card.cost}
+        </div>
+
+        <div
+          className="
+            absolute
+            top-4
+            right-4
+            flex
+            h-14
+            w-14
+            items-center
+            justify-center
+            rounded-full
+            bg-zinc-900
+            text-2xl
+            font-black
+            text-white
+          "
+        >
+          {totalPower}
+        </div>
+
+        <div
+          className="
+            absolute
+            bottom-0
+            left-0
+            right-0
+            p-6
+          "
+        >
           <div
-            className={`
-              flex h-9 w-9 items-center justify-center
-              rounded-full text-lg font-bold text-white shadow
-
-              ${
-                totalPower > card.basePower
-                  ? "bg-green-500"
-                  : totalPower < card.basePower
-                    ? "bg-red-500"
-                    : "bg-zinc-800"
-              }
-            `}
+            className="
+              text-3xl
+              font-black
+              uppercase
+              text-white
+            "
           >
-            {totalPower}
-          </div>
-        </div>
-
-        <div className="px-3">
-          <div className="flex h-28 items-center justify-center rounded-2xl border border-zinc-200 bg-zinc-100" />
-        </div>
-
-        <div className="flex flex-1 flex-col justify-between p-6">
-          <div className="text-center text-lg font-bold text-zinc-900">
             {card.name}
           </div>
 
-          <div className="mt-2 flex items-center justify-center p-2 text-center text-[12px] leading-relaxed text-zinc-600">
-            {card.description || "No ability."}
+          <div
+            className="
+              mt-4
+              rounded-2xl
+              border
+              border-white/10
+              bg-black/40
+              p-4
+              text-sm
+              leading-relaxed
+              text-zinc-300
+              backdrop-blur
+            "
+          >
+            {card.description || "No Ability."}
           </div>
         </div>
       </div>

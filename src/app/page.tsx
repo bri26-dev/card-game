@@ -1,10 +1,10 @@
-// app/page
-
 "use client";
 
 import { useEffect } from "react";
-import { useGameStore } from "@/store/gameStore";
+
 import Board from "@/components/game/Board";
+
+import { useGameStore } from "@/store/gameStore";
 
 export default function Home() {
   const { initializeGame } = useGameStore();
@@ -13,5 +13,9 @@ export default function Home() {
     initializeGame();
   }, []);
 
-  return <Board />;
+  return (
+    <main className="relative flex h-screen flex-col overflow-hidden">
+      <Board />
+    </main>
+  );
 }

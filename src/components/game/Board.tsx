@@ -3,7 +3,6 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-
 import { useGameStore } from "@/store/gameStore";
 
 import type { Card, Lane, LaneKey } from "@/engine/types";
@@ -14,21 +13,20 @@ import {
   getLaneWinner,
 } from "@/engine/core/cardActions";
 
-import { getLaneEffectText } from "@/engine/effects/laneEffects";
-
 import Header from "../sections/Header";
 import BoardLanes from "../sections/BoardLanes";
 import PlayerHand from "../sections/PlayerHand";
 import ActionBar from "../sections/ActionBar";
 
 import GameCard from "./GameCard";
-
 import CardPreview from "../preview/CardPreview";
 import LanePreview from "../preview/LanePreview";
 
 type PreviewLane = {
   name: string;
   description: string;
+  image?: string;
+  revealed?: boolean;
 };
 
 export default function Board() {
@@ -61,7 +59,7 @@ export default function Board() {
 
   const [isDragging, setIsDragging] = useState(false);
 
-  const laneRefs: Record<LaneKey, React.RefObject<HTMLDivElement | null>> = {
+  const laneRefs = {
     lane1: useRef<HTMLDivElement>(null),
     lane2: useRef<HTMLDivElement>(null),
     lane3: useRef<HTMLDivElement>(null),
@@ -106,12 +104,17 @@ export default function Board() {
     if (!lane.revealed) {
       setSelectedLane({
         name: "Hidden Location",
+
         description:
           lane.id === "lane2"
             ? "Reveals on Turn 2."
             : lane.id === "lane3"
               ? "Reveals on Turn 3."
               : "Reveals next turn.",
+
+        image: "/assets/lanes/unrevealed.png",
+
+        revealed: false,
       });
 
       return;
@@ -119,7 +122,12 @@ export default function Board() {
 
     setSelectedLane({
       name: lane.name,
-      description: getLaneEffectText(lane.effect),
+
+      description: lane.description || "No special effect.",
+
+      image: lane.image || "/assets/lanes/fallback.png",
+
+      revealed: true,
     });
   };
 
@@ -134,133 +142,116 @@ export default function Board() {
   };
 
   return (
-    <div className="flex h-screen flex-col bg-zinc-100 text-black">
-      <Header turn={gameState.turn} energy={player.energy} />
+    <div className="relative min-h-screen overflow-hidden text-white">
+      {/* BG */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#1f3b73_0%,#0f172d_38%,#090b13_100%)]" />
 
-      <BoardLanes
-        lanes={gameState.lanes}
-        laneRefs={laneRefs}
-        playerBoard={player.board}
-        enemyBoard={gameState.players.player2.board}
-        getLanePower={getLanePower}
-        getLaneWinner={getLaneWinner}
-        onCardSelect={setSelectedCard}
-        onLaneSelect={handleLaneSelect}
-        movingCard={movingCard}
-        onMoveCard={handleMoveCard}
-        onSelectMoveCard={setMovingCard}
-      />
+        <div className="absolute left-[-20%] top-[8%] h-[340px] w-[340px] rounded-full bg-cyan-400/10 blur-3xl" />
 
-      {gameState.currentPhase !== "end" && (
-        <PlayerHand
-          cards={player.hand}
-          draggingIndex={draggingIndex}
-          isDragging={isDragging}
-          onCardPreview={setSelectedCard}
-          onTouchStart={(event) => {
-            const touch = event.touches[0];
+        <div className="absolute right-[-15%] bottom-[-10%] h-[300px] w-[300px] rounded-full bg-fuchsia-500/10 blur-3xl" />
+      </div>
 
-            setTouchPosition({
-              x: touch.clientX,
-              y: touch.clientY,
-            });
+      <div
+        className="
+        relative
+        z-10
+        mx-auto
+        flex
+        min-h-screen
+        w-full
+        max-w-[560px]
+        flex-col
+        px-[clamp(10px,3vw,18px)]
+        pt-[env(safe-area-inset-top)]
+        pb-5
+        gap-[clamp(12px,2vh,22px)]
+      "
+      >
+        <Header turn={gameState.turn} energy={player.energy} />
 
-            (event.currentTarget as HTMLElement).dataset.dragX =
-              touch.clientX.toString();
-
-            (event.currentTarget as HTMLElement).dataset.dragY =
-              touch.clientY.toString();
-          }}
-          onTouchMove={(event, card, index) => {
-            const touch = event.touches[0];
-
-            const startX = Number(
-              (event.currentTarget as HTMLElement).dataset.dragX,
-            );
-
-            const startY = Number(
-              (event.currentTarget as HTMLElement).dataset.dragY,
-            );
-
-            const deltaX = Math.abs(touch.clientX - startX);
-
-            const deltaY = Math.abs(touch.clientY - startY);
-
-            if (deltaX > 10 || deltaY > 10) {
-              if (!isDragging) {
-                setDraggingCard(card);
-                setDraggingIndex(index);
-                setIsDragging(true);
-              }
-            }
-
-            setTouchPosition({
-              x: touch.clientX,
-              y: touch.clientY,
-            });
-          }}
-          onTouchEnd={handleLaneDrop}
-        />
-      )}
-
-      <ActionBar
-        currentPhase={gameState.currentPhase}
-        onUndo={undoLastAction}
-        onEndTurn={endTurn}
-        onRestart={restartGame}
-      />
-
-      {gameState.currentPhase === "end" && (
-        <div
-          className="
-            pointer-events-none
-            absolute
-            inset-0
-            flex
-            items-center
-            justify-center
-            mb-150
-          "
-        >
-          <div
-            className="
-              rounded-3xl
-              bg-black/70
-              px-8
-              py-5
-              text-center
-              text-white
-              backdrop-blur-md
-            "
-          >
-            <div className="text-xs uppercase tracking-[0.3em] opacity-70">
-              Match Result
-            </div>
-
-            <div className="mt-2 text-3xl font-black">
-              {winner === "draw"
-                ? "DRAW"
-                : winner === "player1"
-                  ? "YOU WIN"
-                  : "YOU LOSE"}
-            </div>
-          </div>
+        <div className="flex-1 flex items-center">
+          <BoardLanes
+            lanes={gameState.lanes}
+            laneRefs={laneRefs}
+            playerBoard={player.board}
+            enemyBoard={gameState.players.player2.board}
+            getLanePower={getLanePower}
+            getLaneWinner={getLaneWinner}
+            onCardSelect={setSelectedCard}
+            onLaneSelect={handleLaneSelect}
+            movingCard={movingCard}
+            onMoveCard={handleMoveCard}
+            onSelectMoveCard={setMovingCard}
+          />
         </div>
-      )}
+
+        {gameState.currentPhase !== "end" && (
+          <PlayerHand
+            cards={player.hand}
+            draggingIndex={draggingIndex}
+            isDragging={isDragging}
+            onCardPreview={setSelectedCard}
+            onTouchStart={(event) => {
+              const touch = event.touches[0];
+
+              setTouchPosition({
+                x: touch.clientX,
+                y: touch.clientY,
+              });
+
+              (event.currentTarget as HTMLElement).dataset.dragX =
+                touch.clientX.toString();
+
+              (event.currentTarget as HTMLElement).dataset.dragY =
+                touch.clientY.toString();
+            }}
+            onTouchMove={(event, card, index) => {
+              const touch = event.touches[0];
+
+              const startX = Number(
+                (event.currentTarget as HTMLElement).dataset.dragX,
+              );
+
+              const startY = Number(
+                (event.currentTarget as HTMLElement).dataset.dragY,
+              );
+
+              const deltaX = Math.abs(touch.clientX - startX);
+
+              const deltaY = Math.abs(touch.clientY - startY);
+
+              if (deltaX > 10 || deltaY > 10) {
+                if (!isDragging) {
+                  setDraggingCard(card);
+                  setDraggingIndex(index);
+                  setIsDragging(true);
+                }
+              }
+
+              setTouchPosition({
+                x: touch.clientX,
+                y: touch.clientY,
+              });
+            }}
+            onTouchEnd={handleLaneDrop}
+          />
+        )}
+
+        <ActionBar
+          currentPhase={gameState.currentPhase}
+          onUndo={undoLastAction}
+          onEndTurn={endTurn}
+          onRestart={restartGame}
+        />
+      </div>
 
       {draggingCard && (
         <div
-          className="
-            pointer-events-none
-            fixed
-            z-[100]
-            scale-[1.15]
-            drop-shadow-2xl
-            will-change-transform
-          "
+          className="pointer-events-none fixed z-[100]"
           style={{
-            left: touchPosition.x - 32,
-            top: touchPosition.y - 48,
+            left: touchPosition.x - 38,
+            top: touchPosition.y - 55,
           }}
         >
           <GameCard card={draggingCard} />

@@ -1,9 +1,14 @@
-// components/preview/LanePreview.tsx
+import Image from "next/image";
 
 type Props = {
   lane: {
     name: string;
+
     description: string;
+
+    image?: string;
+
+    revealed?: boolean;
   };
 
   onClose: () => void;
@@ -14,32 +19,153 @@ export default function LanePreview({ lane, onClose }: Props) {
     <div
       onClick={onClose}
       className="
-        fixed inset-0 z-[200]
-        flex items-center justify-center
-        bg-black/60 p-4 backdrop-blur-sm
+        fixed
+        inset-0
+        z-[200]
+        flex
+        items-center
+        justify-center
+        bg-[#050816]/45
+        p-4
+        backdrop-blur-[8px]
       "
     >
+      {/* BG GLOW */}
+      <div
+        className="
+          absolute
+          inset-0
+          bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.08)_0%,transparent_65%)]
+        "
+      />
+
+      {/* PREVIEW */}
       <div
         onClick={(event) => event.stopPropagation()}
         className="
-          flex w-full max-w-sm flex-col overflow-hidden
-          rounded-3xl border border-zinc-200
-          bg-white shadow-2xl
+          relative
+          w-full
+          max-w-[430px]
+          overflow-hidden
+          rounded-[34px]
+          border
+          border-white/10
+          bg-[#0a0f1d]
+          shadow-[0_25px_90px_rgba(0,0,0,0.6)]
         "
       >
-        <div className="flex items-center justify-center px-6 pb-4 pt-6">
-          <div className="text-center">
-            <div className="text-2xl font-black leading-tight text-zinc-900">
+        {/* LANDSCAPE ART */}
+        <div
+          className="
+            relative
+            h-[270px]
+            w-full
+            overflow-hidden
+          "
+        >
+          <Image
+            src={lane.image || "/assets/lanes/fallback.png"}
+            alt={lane.name}
+            fill
+            priority
+            className="
+              object-cover
+              object-center
+            "
+          />
+
+          {/* TOP OVERLAY */}
+          <div
+            className="
+              absolute
+              inset-0
+              bg-gradient-to-b
+              from-black/15
+              via-transparent
+              to-black/10
+            "
+          />
+
+          {/* TEXT AREA GRADIENT */}
+          <div
+            className="
+              absolute
+              inset-x-0
+              bottom-0
+              h-[120px]
+              bg-gradient-to-t
+              from-black
+              via-black/78
+              to-transparent
+            "
+          />
+
+          {/* EDGE VIGNETTE */}
+          <div
+            className="
+              absolute
+              inset-0
+              bg-[radial-gradient(circle_at_center,transparent_55%,rgba(0,0,0,0.45)_100%)]
+            "
+          />
+
+          {/* HIDDEN EFFECT */}
+          {!lane.revealed && (
+            <div
+              className="
+                absolute
+                inset-0
+                bg-black/35
+                backdrop-blur-[3px]
+              "
+            />
+          )}
+
+          {/* CONTENT */}
+          <div
+            className="
+              absolute
+              bottom-0
+              left-0
+              z-20
+              w-full
+              px-5
+              pb-5
+            "
+          >
+            {/* TITLE */}
+            <div
+              className="
+                text-center
+                text-[30px]
+                font-black
+                uppercase
+                tracking-[0.08em]
+                text-white
+                drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]
+              "
+            >
               {lane.name}
             </div>
-          </div>
-        </div>
 
-        <div className="mx-5 flex h-36 items-center justify-center rounded-2xl border border-zinc-200 bg-zinc-100" />
-
-        <div className="p-5 pt-4">
-          <div className="p-4 text-center">
-            <div className="text-sm leading-relaxed text-zinc-700">
+            {/* DESCRIPTION */}
+            <div
+              className="
+                mt-3
+                rounded-[22px]
+                border
+                border-white/10
+                bg-black/35
+                px-4
+                py-3
+                text-center
+                text-[12px]
+                leading-relaxed
+                text-zinc-200
+                backdrop-blur-md
+                shadow-inner
+              "
+            >
               {lane.description}
             </div>
           </div>

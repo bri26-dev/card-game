@@ -1,5 +1,3 @@
-// components/game/sections/ActionBar.tsx
-
 import type { TurnPhase } from "@/engine/types";
 
 type Props = {
@@ -18,73 +16,138 @@ export default function ActionBar({
   onEndTurn,
   onRestart,
 }: Props) {
-  /**
-   * END GAME
-   */
   if (currentPhase === "end") {
     return (
-      <footer className="border-t bg-white/95 p-3 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur">
-        <button
-          onClick={onRestart}
-          className="
-            w-full
-            rounded-2xl
-            bg-emerald-500
-            py-4
-            text-white
-            shadow-lg
-            shadow-emerald-300/50
-            transition
-            active:scale-[0.98]
-          "
-        >
-          <div className="text-xs uppercase tracking-wide opacity-80">
-            Match Finished
-          </div>
+      <footer className="pt-1 pb-[max(8px,env(safe-area-inset-bottom))]">
+        <div className="pixel-panel p-3">
+          <button
+            onClick={onRestart}
+            className="
+              pixel-button
+              w-full
+              rounded-2xl
+              border-emerald-400/20
+              bg-emerald-500/20
+              py-4
+            "
+          >
+            <div
+              className="
+                text-[10px]
+                uppercase
+                tracking-[0.2em]
+                text-emerald-200
+              "
+            >
+              Match Complete
+            </div>
 
-          <div className="text-base font-black">Play Again</div>
-        </button>
+            <div
+              className="
+                mt-1
+                text-lg
+                font-black
+                uppercase
+                tracking-[0.08em]
+                text-white
+              "
+            >
+              Play Again
+            </div>
+          </button>
+        </div>
       </footer>
     );
   }
 
   return (
-    <footer className="border-t bg-white/95 p-3 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur">
-      <div className="flex gap-3">
+    <footer className="px-2 pb-2 pt-1">
+      <div
+        className="
+      flex
+      gap-2
+      rounded-[24px]
+      border
+      border-white/10
+      bg-gradient-to-b
+      from-[#171e35]
+      to-[#0c1020]
+      p-2
+    "
+      >
         <button
           onClick={onUndo}
           className="
-            flex-1
-            rounded-2xl
-            bg-zinc-200
-            py-3
-            shadow-sm
-            transition
-            active:scale-[0.98]
-          "
+  flex-1
+  rounded-[18px]
+  border
+  border-white/10
+  bg-white/[0.04]
+  py-2.5
+"
         >
-          <div className="text-xs font-semibold text-zinc-700">Undo</div>
+          <div
+            className="
+              text-xs
+              font-bold
+              uppercase
+              tracking-[0.14em]
+              text-zinc-300
+            "
+          >
+            Undo
+          </div>
         </button>
 
         <button
           onClick={onEndTurn}
           className="
-            flex-[1.5]
-            rounded-2xl
-            bg-blue-500
-            py-3
-            text-white
-            shadow-lg
-            shadow-blue-300/50
-            transition
-            active:scale-[0.98]
-          "
+  relative
+  flex-[1.4]
+  overflow-hidden
+  rounded-[18px]
+  border
+  border-cyan-400/20
+  bg-gradient-to-b
+  from-cyan-500/30
+  to-blue-500/20
+  py-2.5
+"
         >
-          <div className="text-xs uppercase tracking-wide opacity-80">
-            Action
-          </div>
+          <div
+            className="
+              absolute
+              inset-0
+              bg-blue-400/10
+              blur-xl
+            "
+          />
 
-          <div className="text-sm font-black">End Turn</div>
+          <div className="relative w-full">
+            <div
+              className="
+                text-[10px]
+                uppercase
+                tracking-[0.25em]
+                text-blue-100
+              "
+            >
+              Action
+            </div>
+
+            <div
+              className="
+                mt-1
+                text-sm
+                font-black
+                uppercase
+                tracking-[0.1em]
+                text-white
+              "
+            >
+              End Turn
+            </div>
+          </div>
         </button>
       </div>
     </footer>

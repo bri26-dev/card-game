@@ -1,4 +1,4 @@
-// components/game/sections/BoardHeader.tsx
+// components/sections/Header.tsx
 
 type Props = {
   turn: number;
@@ -7,29 +7,160 @@ type Props = {
 
 export default function Header({ turn, energy }: Props) {
   return (
-    <header className="border-b bg-white/90 px-4 py-3 shadow-sm backdrop-blur">
-      <div className="flex items-center justify-between">
-        <div className="rounded-2xl bg-zinc-900 px-4 py-2 text-white shadow">
-          <div className="text-[10px] uppercase tracking-widest opacity-70">
-            Turn
+    <header className="px-3 pb-2 pt-3">
+      <div
+        className="
+          relative
+          overflow-hidden
+          rounded-[28px]
+          border
+          border-white/10
+          bg-gradient-to-b
+          from-[#1f2947]
+          via-[#121827]
+          to-[#0a0d18]
+          px-3
+          py-3
+          shadow-[0_10px_40px_rgba(0,0,0,0.45)]
+        "
+      >
+        {/* PIXEL GRID */}
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            opacity-[0.06]
+          "
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, white 1px, transparent 1px),
+              linear-gradient(to bottom, white 1px, transparent 1px)
+            `,
+            backgroundSize: "8px 8px",
+          }}
+        />
+
+        <div className="relative flex items-center justify-between">
+          {/* TURN */}
+          <div
+            className="
+              flex
+              h-[66px]
+              w-[72px]
+              flex-col
+              items-center
+              justify-center
+              rounded-[20px]
+              border
+              border-white/10
+              bg-[#0c1120]
+              shadow-inner
+            "
+          >
+            <span
+              className="
+                text-[8px]
+                uppercase
+                tracking-[0.28em]
+                text-zinc-400
+              "
+            >
+              Turn
+            </span>
+
+            <span
+              className="
+                mt-1
+                text-[26px]
+                font-black
+                leading-none
+                text-white
+              "
+            >
+              {turn}
+            </span>
           </div>
 
-          <div className="text-center text-xl font-black leading-none">
-            {turn}
+          {/* TITLE */}
+          <div className="text-center">
+            <h1
+              className="
+                text-[15px]
+                font-black
+                uppercase
+                tracking-[0.18em]
+                text-white
+              "
+            >
+              CARD BATTLE
+            </h1>
+
+            <p
+              className="
+                mt-1
+                text-[8px]
+                uppercase
+                tracking-[0.24em]
+                text-blue-200/60
+              "
+            >
+              Pixel Strategy
+            </p>
           </div>
-        </div>
 
-        <div className="text-center">
-          <div className="text-sm font-bold text-zinc-800">Card Battle</div>
-        </div>
+          {/* ENERGY */}
+          <div
+            className="
+              relative
+              flex
+              h-[66px]
+              w-[72px]
+              flex-col
+              items-center
+              justify-center
+              overflow-hidden
+              rounded-[20px]
+              border
+              border-cyan-400/20
+              bg-gradient-to-b
+              from-cyan-500/20
+              to-blue-500/10
+            "
+          >
+            <div
+              className="
+                absolute
+                inset-0
+                bg-cyan-300/10
+                blur-xl
+              "
+            />
 
-        <div className="rounded-2xl bg-sky-500 px-4 py-2 text-white shadow">
-          <div className="text-[10px] uppercase tracking-widest opacity-80">
-            Energy
-          </div>
+            <span
+              className="
+                relative
+                text-[8px]
+                uppercase
+                tracking-[0.24em]
+                text-cyan-100
+              "
+            >
+              Energy
+            </span>
 
-          <div className="text-center text-xl font-black leading-none">
-            {energy}
+            <span
+              className="
+                relative
+                mt-1
+                text-[26px]
+                font-black
+                leading-none
+                text-white
+              "
+            >
+              {energy}
+            </span>
           </div>
         </div>
       </div>

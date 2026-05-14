@@ -77,16 +77,21 @@ export interface Player {
   bonusEnergy: number;
 }
 
-export interface Lane {
+export type Lane = {
   id: LaneKey;
 
   name: string;
 
-  effect?: LaneEffect;
-  trigger?: LaneTrigger;
+  image?: string;
+
+  description?: string;
 
   revealed: boolean;
-}
+
+  effect?: LaneEffect;
+
+  trigger?: LaneTrigger;
+};
 
 export interface GameState {
   turn: number;

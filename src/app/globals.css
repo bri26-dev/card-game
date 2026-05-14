@@ -1,26 +1,99 @@
 @import "tailwindcss";
+@import "@fontsource/pixelify-sans";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #f4f4f5;
+
+  --panel: rgba(20, 20, 24, 0.88);
+  --panel-light: rgba(255, 255, 255, 0.04);
+
+  --border: rgba(255, 255, 255, 0.08);
+
+  --blue: #4da3ff;
+  --blue-dark: #1e5eff;
+
+  --gold: #f6c453;
+
+  --danger: #ff5d73;
+
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+
+  --pixel-font: "Pixelify Sans", sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --font-sans: var(--pixel-font);
+  --font-mono: var(--pixel-font);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(circle at top, rgba(50, 80, 255, 0.12), transparent 40%),
+    linear-gradient(to bottom, #0d0d10, #08080a);
+
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+  font-family: var(--pixel-font);
+
+  overflow: hidden;
+}
+
+/* GLOBAL PIXEL LOOK */
+.pixel-panel {
+  background: var(--panel);
+
+  border: 1px solid var(--border);
+
+  box-shadow: var(--shadow);
+
+  backdrop-filter: blur(12px);
+
+  border-radius: 24px;
+}
+
+.pixel-button {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.02)
+  );
+
+  transition:
+    transform 120ms ease,
+    opacity 120ms ease,
+    border-color 120ms ease;
+}
+
+.pixel-button:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.pixel-button:active {
+  transform: scale(0.98);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
 }

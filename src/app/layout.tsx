@@ -1,24 +1,10 @@
-// app/layout.tsx
-
 import type { Metadata } from "next";
-
-import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
   title: "Card Battle",
-  description: "Marvel Snap inspired strategy card game",
+  description: "Premium pixel strategy card game",
 };
 
 export default function RootLayout({
@@ -27,14 +13,49 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`
-        ${geistSans.variable}
-        ${geistMono.variable}
-      `}
-    >
-      <body className="bg-zinc-100 text-black antialiased">{children}</body>
+    <html lang="en">
+      <body className="antialiased">
+        <div className="relative flex min-h-screen flex-col overflow-hidden">
+          {/* BACKGROUND GLOW */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              inset-0
+              opacity-60
+            "
+          >
+            <div
+              className="
+                absolute
+                left-1/2
+                top-[-20%]
+                h-[500px]
+                w-[500px]
+                -translate-x-1/2
+                rounded-full
+                bg-blue-500/10
+                blur-3xl
+              "
+            />
+
+            <div
+              className="
+                absolute
+                bottom-[-15%]
+                right-[-10%]
+                h-[400px]
+                w-[400px]
+                rounded-full
+                bg-violet-500/10
+                blur-3xl
+              "
+            />
+          </div>
+
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

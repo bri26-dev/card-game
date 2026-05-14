@@ -32,6 +32,10 @@ function generateGameLanes(): Lane[] {
 
     name: shuffledLanes[index].name,
 
+    image: shuffledLanes[index].image,
+
+    description: shuffledLanes[index].description,
+
     effect: shuffledLanes[index].effect,
 
     trigger: shuffledLanes[index].trigger,

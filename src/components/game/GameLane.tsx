@@ -1,12 +1,11 @@
 // components/game/GameLane.tsx
 
+import Image from "next/image";
 import type { MutableRefObject } from "react";
 
 import type { Card, Lane, LaneKey } from "@/engine/types";
 
 import GameCard from "./GameCard";
-
-import { getLaneEffectText } from "@/engine/effects/laneEffects";
 
 type Props = {
   lane: Lane;
@@ -56,120 +55,324 @@ export default function GameLane({
 }: Props) {
   const isMoveTarget = movingCard !== null && movingCard?.fromLane !== lane.id;
 
-  /**
-   * MIRRORED ENEMY ORDER
-   *
-   * TOP LEFT     = 3rd card
-   * TOP RIGHT    = 4th card
-   * BOTTOM LEFT  = 1st card
-   * BOTTOM RIGHT = 2nd card
-   */
-
   const enemySlots: (Card | null)[] = [
-    enemyCards[2] ?? null,
-    enemyCards[3] ?? null,
     enemyCards[0] ?? null,
     enemyCards[1] ?? null,
+    enemyCards[2] ?? null,
+    enemyCards[3] ?? null,
   ];
 
-  return (
-    <div className="flex h-[320px] w-[110px] flex-col items-center">
-      {/* ENEMY */}
-      <div className="flex h-[110px] flex-col items-center justify-end">
-        <div className="grid grid-cols-2 gap-[2px]">
-          {enemySlots.map((card, index) => (
-            <div key={`enemy-${index}`} className="scale-[0.5]">
-              {card ? (
-                card.revealed ? (
-                  <GameCard card={card} onClick={() => onCardSelect(card)} />
-                ) : (
-                  <div className="h-24 w-16 rounded-xl border border-blue-400 bg-blue-900" />
-                )
-              ) : (
-                // IMPORTANT:
-                // SAME SIZE AS GameCard
-                // so spacing/layout matches player perfectly
-                <div className="h-20 w-14 opacity-0" />
-              )}
-            </div>
-          ))}
-        </div>
+  const playerSlots: (Card | null)[] = [
+    playerCards[0] ?? null,
+    playerCards[1] ?? null,
+    playerCards[2] ?? null,
+    playerCards[3] ?? null,
+  ];
 
-        <div className="mb-[2px] text-[10px]">
-          ({enemyPower}) {result === "player2" ? "✓" : ""}
-        </div>
+  const displayedImage = lane.revealed
+    ? lane.image || "/assets/lanes/fallback.png"
+    : "/assets/lanes/unrevealed.png";
+
+  return (
+    <div
+      className="
+      relative
+      flex
+      h-[470px]
+      w-[102px]
+      flex-col
+      items-center
+    "
+    >
+      {/* ENEMY */}
+      <div
+        className="
+        relative
+        mb-3
+        grid
+        grid-cols-2
+        gap-[7px]
+      "
+      >
+        {enemySlots.map((card, index) => (
+          <div
+            key={`enemy-${index}`}
+            className="
+            flex
+            h-[66px]
+            w-[46px]
+            items-center
+            justify-center
+          "
+          >
+            {card ? (
+              <div className="scale-[0.57]">
+                <GameCard card={card} onClick={() => onCardSelect(card)} />
+              </div>
+            ) : (
+              <div
+                className="
+                h-[64px]
+                w-[46px]
+                rounded-[16px]
+                border
+                border-dashed
+                border-[#8ea2ff]/10
+                bg-[#09111f]/55
+              "
+              />
+            )}
+          </div>
+        ))}
       </div>
 
-      {/* LOCATION */}
-      <div
-        ref={laneRef}
-        onClick={() => {
-          if (movingCard && onMoveCard) {
-            onMoveCard(movingCard.fromLane, lane.id, movingCard.cardId);
+      {/* LOCATION WRAPPER */}
+      <div className="relative py-[12px]">
+        {/* TOP SCORE */}
+        <div
+          className={`
+          absolute
+          left-1/2
+          top-3
+          z-50
+          flex
+          h-6
+          min-w-[30px]
+          -translate-x-1/2
+          -translate-y-1/2
+          items-center
+          justify-center
+          rounded-full
+          border
+          px-2
+          text-[10px]
+          font-black
+          text-white
+          shadow-lg
 
-            onSelectMoveCard?.(null);
-
-            return;
+          ${
+            result === "player2"
+              ? "bg-red-500 border-red-300/30"
+              : "bg-[#0f1729] border-white/10"
           }
+        `}
+        >
+          {enemyPower}
+        </div>
 
-          onLaneSelect(lane);
-        }}
-        className={`
-          flex h-[60px] w-full flex-col items-center
-          justify-center rounded border text-[10px]
-          transition-all duration-200
+        {/* BOTTOM SCORE */}
+        <div
+          className={`
+          absolute
+          bottom-3
+          left-1/2
+          z-50
+          flex
+          h-6
+          min-w-[30px]
+          -translate-x-1/2
+          translate-y-1/2
+          items-center
+          justify-center
+          rounded-full
+          border
+          px-2
+          text-[10px]
+          font-black
+          text-white
+          shadow-lg
 
           ${
             result === "player1"
-              ? "border-green-400 bg-green-50"
-              : result === "player2"
-                ? "border-red-400 bg-red-50"
-                : "border-gray-300 bg-white"
+              ? "bg-emerald-500 border-emerald-300/30"
+              : "bg-[#0f1729] border-white/10"
           }
-
-          ${isMoveTarget ? "ring-2 ring-blue-500" : ""}
         `}
-      >
-        {lane.revealed ? (
-          <>
-            <div className="font-semibold leading-tight">{lane.name}</div>
+        >
+          {playerPower}
+        </div>
 
-            <div className="p-1 text-center text-[8px] leading-tight text-gray-500">
-              {getLaneEffectText(lane.effect)}
+        {/* LOCATION */}
+        <div
+          ref={laneRef}
+          onClick={() => {
+            if (movingCard && onMoveCard) {
+              onMoveCard(movingCard.fromLane, lane.id, movingCard.cardId);
+
+              onSelectMoveCard?.(null);
+
+              return;
+            }
+
+            onLaneSelect(lane);
+          }}
+          className={`
+          group
+          relative
+          h-[142px]
+          w-[102px]
+          cursor-pointer
+          overflow-hidden
+          transition-all
+          duration-200
+
+          ${isMoveTarget ? "scale-[1.04]" : ""}
+        `}
+          style={{
+            clipPath:
+              "polygon(14% 0%,86% 0%,100% 18%,100% 82%,86% 100%,14% 100%,0% 82%,0% 18%)",
+          }}
+        >
+          {/* FRAME */}
+          <div
+            className={`
+            absolute
+            inset-0
+            border
+            bg-[linear-gradient(180deg,#1a2750_0%,#0a1020_100%)]
+
+            ${
+              result === "player1"
+                ? "border-emerald-400/40"
+                : result === "player2"
+                  ? "border-red-400/40"
+                  : "border-[#8ea2ff]/18"
+            }
+
+            ${isMoveTarget ? "animate-pulse border-cyan-300/60" : ""}
+          `}
+          />
+
+          <Image
+            src={displayedImage}
+            alt={lane.name}
+            fill
+            className="
+              object-cover
+              opacity-90
+              transition-transform
+              duration-300
+              group-hover:scale-105
+            "
+          />
+
+          <div
+            className="
+            absolute
+            inset-0
+            bg-gradient-to-b
+            from-[#0b1020]/10
+            via-[#0b1020]/35
+            to-[#0b1020]/88
+          "
+          />
+
+          {!lane.revealed && (
+            <div
+              className="
+              absolute
+              inset-0
+              bg-black/40
+              backdrop-blur-[2px]
+            "
+            />
+          )}
+
+          {/* TEXT */}
+          <div
+            className="
+            relative
+            z-10
+            flex
+            h-full
+            flex-col
+            items-center
+            justify-center
+            px-2
+            text-center
+          "
+          >
+            <div
+              className="
+              text-[12px]
+              font-black
+              uppercase
+              tracking-[0.12em]
+              text-white
+            "
+            >
+              {lane.revealed ? lane.name : "Hidden"}
             </div>
-          </>
-        ) : (
-          <div className="text-[9px] italic text-gray-400">Hidden Location</div>
-        )}
+
+            <div
+              className="
+              mt-2
+              max-w-[80px]
+              text-[8px]
+              leading-relaxed
+              text-zinc-200
+            "
+            >
+              {lane.revealed ? lane.description : "Reveals Soon"}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* PLAYER */}
-      <div className="flex h-[110px] flex-col items-center justify-start">
-        <div className="mt-[2px] text-[10px]">
-          ({playerPower}) {result === "player1" ? "✓" : ""}
-        </div>
+      <div
+        className="
+        relative
+        mt-3
+        grid
+        grid-cols-2
+        gap-[7px]
+      "
+      >
+        {playerSlots.map((card, index) => (
+          <div
+            key={`player-${index}`}
+            className="
+            flex
+            h-[66px]
+            w-[46px]
+            items-center
+            justify-center
+          "
+          >
+            {card ? (
+              <div className="scale-[0.57]">
+                <GameCard
+                  card={card}
+                  onClick={() => {
+                    if (card.ability === "move_once" && !card.moved) {
+                      onSelectMoveCard?.({
+                        cardId: card.id,
+                        fromLane: lane.id,
+                      });
 
-        <div className="grid grid-cols-2 gap-[2px]">
-          {playerCards.map((card) => (
-            <div key={card.id} className="scale-[0.5]">
-              <GameCard
-                card={card}
-                onClick={() => {
-                  if (card.ability === "move_once" && !card.moved) {
-                    onSelectMoveCard?.({
-                      cardId: card.id,
-                      fromLane: lane.id,
-                    });
+                      return;
+                    }
 
-                    return;
-                  }
-
-                  onCardSelect(card);
-                }}
+                    onCardSelect(card);
+                  }}
+                />
+              </div>
+            ) : (
+              <div
+                className="
+                h-[64px]
+                w-[46px]
+                rounded-[16px]
+                border
+                border-dashed
+                border-[#8ea2ff]/10
+                bg-[#09111f]/55
+              "
               />
-            </div>
-          ))}
-        </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

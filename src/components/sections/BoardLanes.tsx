@@ -1,6 +1,7 @@
 // components/sections/BoardLanes.tsx
 
 import type { Card, Lane, LaneKey } from "@/engine/types";
+
 import GameLane from "../game/GameLane";
 
 type Props = {
@@ -19,9 +20,9 @@ type Props = {
   ) => "player1" | "player2" | "draw";
 
   onCardSelect: (card: Card) => void;
+
   onLaneSelect: (lane: Lane) => void;
 
-  // ✅ MOVE SYSTEM
   movingCard: {
     cardId: string;
     fromLane: LaneKey;
@@ -51,10 +52,28 @@ export default function BoardLanes({
   onSelectMoveCard,
 }: Props) {
   return (
-    <main className="flex flex-1 items-center justify-center">
-      <div className="flex gap-2">
+    <main className="flex w-full justify-center">
+      <div
+        className="
+w-full
+flex
+justify-center
+gap-[clamp(8px,2vw,16px)]
+px-[clamp(6px,2vw,14px)]
+py-[clamp(10px,2vh,20px)]
+
+rounded-[34px]
+border
+border-white/10
+bg-[#09101f]/40
+backdrop-blur-xl
+
+shadow-[0_18px_60px_rgba(0,0,0,.35)]
+"
+      >
         {lanes.map((lane) => {
           const playerCards = playerBoard[lane.id];
+
           const enemyCards = enemyBoard[lane.id];
 
           return (
@@ -69,7 +88,6 @@ export default function BoardLanes({
               result={getLaneWinner(playerCards, enemyCards)}
               onCardSelect={onCardSelect}
               onLaneSelect={onLaneSelect}
-              // ✅ MOVE SYSTEM WIRED
               movingCard={movingCard}
               onMoveCard={onMoveCard}
               onSelectMoveCard={onSelectMoveCard}

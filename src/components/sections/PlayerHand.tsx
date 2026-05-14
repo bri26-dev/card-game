@@ -1,4 +1,4 @@
-// components/game/sections/PlayerHand.tsx
+// components/sections/PlayerHand.tsx
 
 import type { TouchEvent } from "react";
 
@@ -35,71 +35,97 @@ export default function PlayerHand({
   onTouchEnd,
 }: Props) {
   return (
-    <section className="relative h-32 overflow-hidden border-t bg-white">
-      <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 items-end">
-        {cards.map((card, index) => {
-          const total = cards.length;
+    <section className="w-full pt-1">
+      <div
+        className="
+relative
+overflow-hidden
 
-          const offset = (index - (total - 1) / 2) * 32;
+rounded-[30px]
+border
+border-white/10
 
-          const rotation = (index - (total - 1) / 2) * 6;
+bg-gradient-to-b
+from-[#1b2344]
+to-[#0b1020]
 
-          const lift = Math.abs(index - (total - 1) / 2) * -2;
+px-2
+py-[clamp(16px,2vh,22px)]
 
-          return (
-            <div
-              key={card.id}
-              className="relative transition-all duration-150"
-              style={{
-                transform: `
-                  translateX(${offset}px)
-                  translateY(${lift}px)
-                  rotate(${rotation}deg)
-                `,
-                marginLeft: index === 0 ? 0 : -28,
-                zIndex: index,
-              }}
-            >
-              <button
-                onClick={() => onCardPreview(card)}
-                className="
-                  absolute
-                  bottom-[-8px]
-                  left-1/2
-                  z-20
-                  flex
-                  h-5
-                  w-5
-                  -translate-x-1/2
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-black/80
-                  text-[10px]
-                  text-white
-                  shadow
-                "
-              >
-                👁
-              </button>
+shadow-[0_18px_50px_rgba(0,0,0,.4)]
+"
+      >
+        {/* GRID */}
+        <div
+          className="
+            absolute
+            inset-0
+            opacity-[0.05]
+          "
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, white 1px, transparent 1px),
+              linear-gradient(to bottom, white 1px, transparent 1px)
+            `,
+            backgroundSize: "8px 8px",
+          }}
+        />
 
+        <div
+          className="
+            relative
+            flex
+            items-end
+            justify-center
+            min-h-[92px]
+          "
+        >
+          {cards.map((card, index) => {
+            const total = cards.length;
+
+            const spread = total <= 3 ? 48 : total <= 5 ? 36 : 28;
+
+            const overlap = total <= 5 ? -20 : -28;
+
+            const centerOffset = index - (total - 1) / 2;
+
+            const offset = centerOffset * spread;
+
+            const rotation = centerOffset * 4;
+
+            return (
               <div
-                className={
-                  draggingIndex === index
-                    ? "opacity-0 transition-all"
-                    : "transition-all"
-                }
+                key={card.id}
+                className="
+                  relative
+                  transition-all
+                  duration-150
+                  hover:z-50
+                  hover:-translate-y-3
+                "
+                style={{
+                  transform: `
+ translateX(${offset}px)
+ rotate(${rotation}deg)
+ `,
+                  marginLeft: index === 0 ? 0 : overlap,
+
+                  zIndex: index + 1,
+                }}
               >
-                <GameCard
-                  card={card}
-                  onTouchStart={onTouchStart}
-                  onTouchMove={(event) => onTouchMove(event, card, index)}
-                  onTouchEnd={onTouchEnd}
-                />
+                <div className={draggingIndex === index ? "opacity-0" : ""}>
+                  <GameCard
+                    card={card}
+                    onTouchStart={onTouchStart}
+                    onTouchMove={(event) => onTouchMove(event, card, index)}
+                    onTouchEnd={onTouchEnd}
+                    onClick={() => onCardPreview(card)}
+                  />
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </section>
   );

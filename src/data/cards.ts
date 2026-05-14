@@ -1,6 +1,15 @@
+// data/assets/cards.ts
+
 import { Card } from "@/engine/types";
 
-function createCard(cardData: Omit<Card, "basePower" | "modifier">): Card {
+type CardTemplate = Omit<Card, "basePower" | "modifier"> & {
+  image: string;
+};
+
+function createCard(cardData: CardTemplate): CardTemplate & {
+  basePower: number;
+  modifier: number;
+} {
   return {
     ...cardData,
     basePower: cardData.power,
@@ -8,13 +17,15 @@ function createCard(cardData: Omit<Card, "basePower" | "modifier">): Card {
   };
 }
 
-export const starterCards: Card[] = [
+export const starterCards = [
   /**
    * VANILLA
    */
   createCard({
     id: "warrior_1",
     name: "Warrior",
+
+    image: "/assets/cards/warrior.png",
 
     cost: 1,
     power: 2,
@@ -30,6 +41,8 @@ export const starterCards: Card[] = [
   createCard({
     id: "rogue_1",
     name: "Rogue",
+
+    image: "/assets/cards/rogue.png",
 
     cost: 1,
     power: 1,
@@ -47,6 +60,8 @@ export const starterCards: Card[] = [
     id: "scout_1",
     name: "Scout",
 
+    image: "/assets/cards/scout.png",
+
     cost: 2,
     power: 2,
 
@@ -62,6 +77,8 @@ export const starterCards: Card[] = [
   createCard({
     id: "berserker_1",
     name: "Berserker",
+
+    image: "/assets/cards/berserker.png",
 
     cost: 2,
     power: 3,
@@ -79,6 +96,8 @@ export const starterCards: Card[] = [
     id: "captain_1",
     name: "Captain",
 
+    image: "/assets/cards/captain.png",
+
     cost: 3,
     power: 3,
 
@@ -94,6 +113,8 @@ export const starterCards: Card[] = [
   createCard({
     id: "bard_1",
     name: "Bard",
+
+    image: "/assets/cards/bard.png",
 
     cost: 2,
     power: 2,
@@ -111,6 +132,8 @@ export const starterCards: Card[] = [
     id: "assassin_1",
     name: "Assassin",
 
+    image: "/assets/cards/assassin.png",
+
     cost: 3,
     power: 2,
 
@@ -126,6 +149,8 @@ export const starterCards: Card[] = [
   createCard({
     id: "warlock_1",
     name: "Warlock",
+
+    image: "/assets/cards/warlock.png",
 
     cost: 5,
     power: 4,
@@ -143,6 +168,8 @@ export const starterCards: Card[] = [
     id: "hunter_1",
     name: "Hunter",
 
+    image: "/assets/cards/hunter.png",
+
     cost: 4,
     power: 3,
 
@@ -158,6 +185,8 @@ export const starterCards: Card[] = [
   createCard({
     id: "executioner_1",
     name: "Executioner",
+
+    image: "/assets/cards/executioner.png",
 
     cost: 5,
     power: 4,
@@ -175,6 +204,8 @@ export const starterCards: Card[] = [
     id: "wanderer_1",
     name: "Wanderer",
 
+    image: "/assets/cards/wanderer.png",
+
     cost: 2,
     power: 4,
 
@@ -190,6 +221,8 @@ export const starterCards: Card[] = [
   createCard({
     id: "giant_1",
     name: "Giant",
+
+    image: "/assets/cards/giant.png",
 
     cost: 6,
     power: 8,
