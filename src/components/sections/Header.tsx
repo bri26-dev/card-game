@@ -14,18 +14,11 @@ export default function Header({ turn, energy }: Props) {
           relative
           overflow-hidden
 
-          rounded-[26px]
-          border
-          border-white/10
-
-          bg-[#0d1426]/90
 
           px-3
           py-2.5
 
-          backdrop-blur-xl
 
-          shadow-[0_12px_40px_rgba(0,0,0,.45)]
         "
       >
         {/* LIGHT */}
@@ -91,7 +84,7 @@ export default function Header({ turn, energy }: Props) {
                 text-white
               "
             >
-              PIXEL DUEL
+              CARD GAME
             </h1>
 
             <p
@@ -103,7 +96,7 @@ export default function Header({ turn, energy }: Props) {
                 text-cyan-100/70
               "
             >
-              Pocket Arena
+              Version 0.2
             </p>
           </div>
 

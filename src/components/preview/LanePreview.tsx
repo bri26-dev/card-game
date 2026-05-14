@@ -151,19 +151,12 @@ export default function LanePreview({ lane, onClose }: Props) {
             {/* DESCRIPTION */}
             <div
               className="
-                mt-3
-                rounded-[22px]
-                border
-                border-white/10
-                bg-black/35
                 px-4
                 py-3
                 text-center
                 text-[12px]
                 leading-relaxed
                 text-zinc-200
-                backdrop-blur-md
-                shadow-inner
               "
             >
               {lane.description}

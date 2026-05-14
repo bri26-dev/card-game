@@ -60,35 +60,13 @@ export default function BoardLanes({
           w-full
           justify-center
 
-          gap-2
-          sm:gap-3
-
-          rounded-[28px]
-          border
-          border-white/10
-
-          bg-[#0a1120]/70
+          gap-6
+          sm:gap-10
 
           px-2
           py-3
-
-          backdrop-blur-xl
-
-          shadow-[0_16px_40px_rgba(0,0,0,.45)]
         "
       >
-        {/* INNER LIGHT */}
-        <div
-          className="
-            pointer-events-none
-            absolute
-            inset-0
-            rounded-[28px]
-
-            bg-[linear-gradient(180deg,rgba(255,255,255,0.05),transparent)]
-          "
-        />
-
         {lanes.map((lane) => {
           const playerCards = playerBoard[lane.id];
 

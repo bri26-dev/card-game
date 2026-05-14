@@ -73,89 +73,95 @@ export default function GameLane({
     ? lane.image || "/assets/lanes/fallback.png"
     : "/assets/lanes/unrevealed.png";
 
+  const hiddenText =
+    lane.id === "lane2"
+      ? "Reveals Turn 2"
+      : lane.id === "lane3"
+        ? "Reveals Turn 3"
+        : "Reveals Soon";
+
   return (
     <div
       className="
-      relative
-      flex
-      h-[470px]
-      w-[102px]
-      flex-col
-      items-center
-    "
+        relative
+        flex
+        h-[420px]
+        w-[108px]
+        flex-col
+        items-center
+
+        sm:h-[455px]
+        sm:w-[116px]
+      "
     >
       {/* ENEMY */}
       <div
         className="
-        relative
-        mb-3
-        grid
-        grid-cols-2
-        gap-[7px]
-      "
+          relative
+          mb-2
+          grid
+          grid-cols-2
+          gap-[6px]
+        "
       >
         {enemySlots.map((card, index) => (
           <div
             key={`enemy-${index}`}
             className="
-            flex
-            h-[66px]
-            w-[46px]
-            items-center
-            justify-center
-          "
+              flex
+              h-[60px]
+              w-[44px]
+              items-center
+              justify-center
+
+              sm:h-[66px]
+              sm:w-[46px]
+            "
           >
             {card ? (
-              <div className="scale-[0.57]">
+              <div className="scale-[0.54] sm:scale-[0.57]">
                 <GameCard card={card} onClick={() => onCardSelect(card)} />
               </div>
             ) : (
-              <div
-                className="
-                h-[64px]
-                w-[46px]
-                rounded-[16px]
-                border
-                border-dashed
-                border-[#8ea2ff]/10
-                bg-[#09111f]/55
-              "
-              />
+              <div className="h-[60px] w-[44px] sm:h-[66px] sm:w-[46px]" />
             )}
           </div>
         ))}
       </div>
 
-      {/* LOCATION WRAPPER */}
-      <div className="relative py-[12px]">
+      {/* LOCATION */}
+      <div className="relative py-[10px]">
         {/* TOP SCORE */}
         <div
           className={`
-          absolute
-          left-1/2
-          top-3
-          z-50
-          flex
-          h-6
-          min-w-[30px]
-          -translate-x-1/2
-          -translate-y-1/2
-          items-center
-          justify-center
-          rounded-full
-          border
-          px-2
-          text-[10px]
-          font-black
-          text-white
-          shadow-lg
+            absolute
+            left-1/2
+            top-2
+            z-50
+            flex
+            h-6
+            min-w-[34px]
+            -translate-x-1/2
+            -translate-y-1/2
+            items-center
+            justify-center
+            rounded-full
+            border
+            px-2
 
-          ${
-            result === "player2"
-              ? "bg-red-500 border-red-300/30"
-              : "bg-[#0f1729] border-white/10"
-          }
-        `}
+            text-[10px]
+            font-black
+            text-white
+
+            shadow-lg
+            backdrop-blur-md
+
+            ${
+              result === "player2"
+                ? "border-red-300/40 bg-red-500"
+                : "border-white/10 bg-[#10182c]"
+            }
+          `}
         >
           {enemyPower}
         </div>
@@ -163,36 +169,38 @@ export default function GameLane({
         {/* BOTTOM SCORE */}
         <div
           className={`
-          absolute
-          bottom-3
-          left-1/2
-          z-50
-          flex
-          h-6
-          min-w-[30px]
-          -translate-x-1/2
-          translate-y-1/2
-          items-center
-          justify-center
-          rounded-full
-          border
-          px-2
-          text-[10px]
-          font-black
-          text-white
-          shadow-lg
+            absolute
+            bottom-2
+            left-1/2
+            z-50
+            flex
+            h-6
+            min-w-[34px]
+            -translate-x-1/2
+            translate-y-1/2
+            items-center
+            justify-center
+            rounded-full
+            border
+            px-2
 
-          ${
-            result === "player1"
-              ? "bg-emerald-500 border-emerald-300/30"
-              : "bg-[#0f1729] border-white/10"
-          }
-        `}
+            text-[10px]
+            font-black
+            text-white
+
+            shadow-lg
+            backdrop-blur-md
+
+            ${
+              result === "player1"
+                ? "border-emerald-300/40 bg-emerald-500"
+                : "border-white/10 bg-[#10182c]"
+            }
+          `}
         >
           {playerPower}
         </div>
 
-        {/* LOCATION */}
         <div
           ref={laneRef}
           onClick={() => {
@@ -207,40 +215,47 @@ export default function GameLane({
             onLaneSelect(lane);
           }}
           className={`
-          group
-          relative
-          h-[142px]
-          w-[102px]
-          cursor-pointer
-          overflow-hidden
-          transition-all
-          duration-200
+            group
+            relative
 
-          ${isMoveTarget ? "scale-[1.04]" : ""}
-        `}
-          style={{
-            clipPath:
-              "polygon(14% 0%,86% 0%,100% 18%,100% 82%,86% 100%,14% 100%,0% 82%,0% 18%)",
-          }}
+            h-[128px]
+            w-[124px]
+
+            sm:h-[138px]
+            sm:w-[116px]
+
+            cursor-pointer
+            overflow-hidden
+
+            rounded-[28px]
+
+            transition-all
+            duration-200
+
+            ${isMoveTarget ? "scale-[1.03]" : ""}
+          `}
         >
           {/* FRAME */}
           <div
             className={`
-            absolute
-            inset-0
-            border
-            bg-[linear-gradient(180deg,#1a2750_0%,#0a1020_100%)]
+              absolute
+              inset-0
 
-            ${
-              result === "player1"
-                ? "border-emerald-400/40"
-                : result === "player2"
-                  ? "border-red-400/40"
-                  : "border-[#8ea2ff]/18"
-            }
+              rounded-[28px]
+              border
 
-            ${isMoveTarget ? "animate-pulse border-cyan-300/60" : ""}
-          `}
+              bg-[linear-gradient(180deg,#1b2850_0%,#0a1020_100%)]
+
+              ${
+                result === "player1"
+                  ? "border-emerald-400/40"
+                  : result === "player2"
+                    ? "border-red-400/40"
+                    : "border-cyan-200/10"
+              }
+
+              ${isMoveTarget ? "animate-pulse border-cyan-300/70" : ""}
+            `}
           />
 
           <Image
@@ -250,70 +265,86 @@ export default function GameLane({
             className="
               object-cover
               opacity-90
+
               transition-transform
               duration-300
+
               group-hover:scale-105
             "
           />
 
+          {/* OVERLAY */}
           <div
             className="
-            absolute
-            inset-0
-            bg-gradient-to-b
-            from-[#0b1020]/10
-            via-[#0b1020]/35
-            to-[#0b1020]/88
-          "
+              absolute
+              inset-0
+
+              bg-gradient-to-b
+              from-[#0a1020]/10
+              via-[#0a1020]/45
+              to-[#0a1020]/92
+            "
           />
 
           {!lane.revealed && (
             <div
               className="
-              absolute
-              inset-0
-              bg-black/40
-              backdrop-blur-[2px]
-            "
+                absolute
+                inset-0
+                bg-black/40
+                backdrop-blur-[3px]
+              "
             />
           )}
 
-          {/* TEXT */}
+          {/* CONTENT */}
           <div
             className="
-            relative
-            z-10
-            flex
-            h-full
-            flex-col
-            items-center
-            justify-center
-            px-2
-            text-center
-          "
+              relative
+              z-10
+
+              flex
+              h-full
+              flex-col
+              items-center
+              justify-end
+
+              px-3
+              pb-4
+
+              text-center
+            "
           >
             <div
               className="
-              text-[12px]
-              font-black
-              uppercase
-              tracking-[0.12em]
-              text-white
-            "
+                text-[12px]
+                font-black
+                uppercase
+                tracking-[0.08em]
+                text-white
+
+                sm:text-[13px]
+              "
             >
               {lane.revealed ? lane.name : "Hidden"}
             </div>
 
             <div
               className="
-              mt-2
-              max-w-[80px]
-              text-[8px]
-              leading-relaxed
-              text-zinc-200
-            "
+                mt-2
+
+                max-w-[92px]
+
+                text-[8px]
+                leading-[1.45]
+
+                text-zinc-200
+
+                sm:max-w-[100px]
+                sm:text-[9px]
+              "
             >
-              {lane.revealed ? lane.description : "Reveals Soon"}
+              {lane.revealed ? lane.description : hiddenText}
             </div>
           </div>
         </div>
@@ -322,26 +353,29 @@ export default function GameLane({
       {/* PLAYER */}
       <div
         className="
-        relative
-        mt-3
-        grid
-        grid-cols-2
-        gap-[7px]
-      "
+          relative
+          mt-2
+          grid
+          grid-cols-2
+          gap-[6px]
+        "
       >
         {playerSlots.map((card, index) => (
           <div
             key={`player-${index}`}
             className="
-            flex
-            h-[66px]
-            w-[46px]
-            items-center
-            justify-center
-          "
+              flex
+              h-[60px]
+              w-[44px]
+              items-center
+              justify-center
+
+              sm:h-[66px]
+              sm:w-[46px]
+            "
           >
             {card ? (
-              <div className="scale-[0.57]">
+              <div className="scale-[0.54] sm:scale-[0.57]">
                 <GameCard
                   card={card}
                   onClick={() => {
@@ -359,17 +393,7 @@ export default function GameLane({
                 />
               </div>
             ) : (
-              <div
-                className="
-                h-[64px]
-                w-[46px]
-                rounded-[16px]
-                border
-                border-dashed
-                border-[#8ea2ff]/10
-                bg-[#09111f]/55
-              "
-              />
+              <div className="h-[60px] w-[44px] sm:h-[66px] sm:w-[46px]" />
             )}
           </div>
         ))}

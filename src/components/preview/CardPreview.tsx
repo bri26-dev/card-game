@@ -116,6 +116,7 @@ export default function CardPreview({ card, onClose }: Props) {
           <div
             className="
               text-3xl
+              text-center
               font-black
               uppercase
               text-white
@@ -126,16 +127,11 @@ export default function CardPreview({ card, onClose }: Props) {
 
           <div
             className="
-              mt-4
-              rounded-2xl
-              border
-              border-white/10
-              bg-black/40
               p-4
               text-sm
+              text-center
               leading-relaxed
               text-zinc-300
-              backdrop-blur
             "
           >
             {card.description || "No Ability."}

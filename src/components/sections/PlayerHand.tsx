@@ -41,29 +41,10 @@ export default function PlayerHand({
           relative
           overflow-hidden
 
-          rounded-[28px]
-          border
-          border-white/10
-
-          bg-[#0d1528]/90
-
           px-1
           py-3
-
-          backdrop-blur-xl
-
-          shadow-[0_16px_40px_rgba(0,0,0,.45)]
         "
       >
-        {/* LIGHT */}
-        <div
-          className="
-            absolute
-            inset-0
-            bg-[linear-gradient(180deg,rgba(255,255,255,0.05),transparent)]
-          "
-        />
-
         <div
           className="
             relative

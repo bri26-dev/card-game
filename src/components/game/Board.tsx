@@ -155,20 +155,11 @@ export default function Board() {
         relative
         min-h-screen
         overflow-hidden
-        bg-[#050816]
         text-white
       "
     >
       {/* BACKGROUND */}
       <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="
-            absolute
-            inset-0
-            bg-[radial-gradient(circle_at_top,#243b7d_0%,#10172a_35%,#050816_100%)]
-          "
-        />
-
         <div
           className="
             absolute
@@ -193,22 +184,6 @@ export default function Board() {
             bg-fuchsia-500/10
             blur-3xl
           "
-        />
-
-        {/* SOFT GRID */}
-        <div
-          className="
-            absolute
-            inset-0
-            opacity-[0.03]
-          "
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, white 1px, transparent 1px),
-              linear-gradient(to bottom, white 1px, transparent 1px)
-            `,
-            backgroundSize: "12px 12px",
-          }}
         />
       </div>
 

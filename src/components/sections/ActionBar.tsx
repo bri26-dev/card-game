@@ -21,21 +21,7 @@ export default function ActionBar({
   if (currentPhase === "end") {
     return (
       <footer className="shrink-0">
-        <div
-          className="
-            rounded-[24px]
-            border
-            border-white/10
-
-            bg-[#0c1324]/90
-
-            p-2
-
-            backdrop-blur-xl
-
-            shadow-[0_12px_30px_rgba(0,0,0,.4)]
-          "
-        >
+        <div className="p-2">
           <button
             onClick={onRestart}
             className="
@@ -89,31 +75,9 @@ export default function ActionBar({
           flex
           gap-2
 
-          rounded-[24px]
-          border
-          border-white/10
-
-          bg-[#0c1324]/92
-
           p-2
-
-          backdrop-blur-xl
-
-          shadow-[0_12px_30px_rgba(0,0,0,.45)]
         "
       >
-        {/* SHINE */}
-        <div
-          className="
-            absolute
-            inset-0
-
-            rounded-[24px]
-
-            bg-[linear-gradient(180deg,rgba(255,255,255,0.04),transparent)]
-          "
-        />
-
         {/* UNDO */}
         <button
           onClick={onUndo}

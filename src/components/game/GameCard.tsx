@@ -53,10 +53,6 @@ export default function GameCard({
         w-[74px]
         overflow-hidden
         rounded-[18px]
-        border
-        border-[#90a4ff]/20
-        bg-[linear-gradient(180deg,#1a2140_0%,#0b1020_100%)]
-        shadow-[0_6px_20px_rgba(0,0,0,0.35)]
         transition-all
         duration-150
 
@@ -67,17 +63,6 @@ export default function GameCard({
         }
       `}
     >
-      {/* FRAME */}
-      <div
-        className="
-          absolute
-          inset-0
-          bg-gradient-to-b
-          from-white/[0.08]
-          to-transparent
-        "
-      />
-
       {/* IMAGE */}
       <div
         className="
@@ -177,7 +162,7 @@ export default function GameCard({
         <div
           className="
             text-center
-            text-[8px]
+            text-[10px]
             font-black
             uppercase
             tracking-[0.08em]
