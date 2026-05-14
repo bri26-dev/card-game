@@ -155,7 +155,7 @@ export default function Board() {
         relative
         min-h-screen
         overflow-hidden
-        bg-[#060816]
+        bg-[#050816]
         text-white
       "
     >
@@ -165,7 +165,7 @@ export default function Board() {
           className="
             absolute
             inset-0
-            bg-[radial-gradient(circle_at_top,#213a7d_0%,#10172d_35%,#050816_100%)]
+            bg-[radial-gradient(circle_at_top,#243b7d_0%,#10172a_35%,#050816_100%)]
           "
         />
 
@@ -173,9 +173,9 @@ export default function Board() {
           className="
             absolute
             left-[-15%]
-            top-[8%]
-            h-[320px]
-            w-[320px]
+            top-[5%]
+            h-[240px]
+            w-[240px]
             rounded-full
             bg-cyan-400/10
             blur-3xl
@@ -185,29 +185,29 @@ export default function Board() {
         <div
           className="
             absolute
-            right-[-15%]
-            bottom-[-10%]
-            h-[320px]
-            w-[320px]
+            right-[-10%]
+            bottom-[-8%]
+            h-[220px]
+            w-[220px]
             rounded-full
             bg-fuchsia-500/10
             blur-3xl
           "
         />
 
-        {/* PIXEL GRID */}
+        {/* SOFT GRID */}
         <div
           className="
             absolute
             inset-0
-            opacity-[0.04]
+            opacity-[0.03]
           "
           style={{
             backgroundImage: `
               linear-gradient(to right, white 1px, transparent 1px),
               linear-gradient(to bottom, white 1px, transparent 1px)
             `,
-            backgroundSize: "10px 10px",
+            backgroundSize: "12px 12px",
           }}
         />
       </div>
@@ -218,28 +218,33 @@ export default function Board() {
           relative
           z-10
           mx-auto
+
           flex
-          min-h-screen
+          h-screen
           w-full
-          max-w-[560px]
+          max-w-[540px]
           flex-col
 
-          px-3
-          pt-[max(12px,env(safe-area-inset-top))]
-          pb-[max(20px,env(safe-area-inset-bottom))]
+          px-2
+          sm:px-3
 
-          gap-3
+          pt-[max(8px,env(safe-area-inset-top))]
+          pb-[max(10px,env(safe-area-inset-bottom))]
+
+          gap-2
+          sm:gap-3
         "
       >
         <Header turn={gameState.turn} energy={player.energy} />
 
-        {/* BOARD AREA */}
+        {/* BOARD */}
         <div
           className="
             flex
             flex-1
             items-center
             justify-center
+
             min-h-0
           "
         >
@@ -322,13 +327,16 @@ export default function Board() {
         />
       </div>
 
-      {/* DRAG CARD */}
+      {/* DRAGGING CARD */}
       {draggingCard && (
         <div
           className="
             pointer-events-none
             fixed
             z-[100]
+
+            scale-[0.9]
+            sm:scale-100
           "
           style={{
             left: touchPosition.x - 38,

@@ -8,74 +8,59 @@ type Props = {
 
 export default function Header({ turn, energy }: Props) {
   return (
-    <header className="pt-1">
+    <header className="shrink-0">
       <div
         className="
           relative
           overflow-hidden
 
-          rounded-[30px]
+          rounded-[26px]
           border
           border-white/10
 
-          bg-[linear-gradient(180deg,#1c2950_0%,#10182d_50%,#0b1020_100%)]
+          bg-[#0d1426]/90
 
-          px-4
-          py-4
+          px-3
+          py-2.5
 
-          shadow-[0_18px_50px_rgba(0,0,0,0.45)]
           backdrop-blur-xl
+
+          shadow-[0_12px_40px_rgba(0,0,0,.45)]
         "
       >
-        {/* GLOW */}
+        {/* LIGHT */}
         <div
           className="
             absolute
             inset-0
-            bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_65%)]
+            bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent)]
           "
         />
 
-        {/* GRID */}
-        <div
-          className="
-            absolute
-            inset-0
-            opacity-[0.05]
-          "
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, white 1px, transparent 1px),
-              linear-gradient(to bottom, white 1px, transparent 1px)
-            `,
-            backgroundSize: "8px 8px",
-          }}
-        />
-
-        <div className="relative flex items-center justify-between">
+        <div className="relative flex items-center justify-between gap-2">
           {/* TURN */}
           <div
             className="
               flex
-              h-[72px]
-              w-[76px]
+              h-[58px]
+              w-[64px]
+              shrink-0
               flex-col
               items-center
               justify-center
 
-              rounded-[22px]
+              rounded-[18px]
               border
               border-white/10
 
-              bg-black/25
-              backdrop-blur-md
+              bg-black/20
             "
           >
             <span
               className="
-                text-[8px]
+                text-[7px]
                 uppercase
-                tracking-[0.28em]
+                tracking-[0.24em]
                 text-zinc-400
               "
             >
@@ -85,7 +70,7 @@ export default function Header({ turn, energy }: Props) {
             <span
               className="
                 mt-1
-                text-[28px]
+                text-[22px]
                 font-black
                 leading-none
                 text-white
@@ -96,13 +81,13 @@ export default function Header({ turn, energy }: Props) {
           </div>
 
           {/* TITLE */}
-          <div className="text-center">
+          <div className="flex-1 text-center">
             <h1
               className="
-                text-[16px]
+                text-[13px]
                 font-black
                 uppercase
-                tracking-[0.18em]
+                tracking-[0.16em]
                 text-white
               "
             >
@@ -112,13 +97,13 @@ export default function Header({ turn, energy }: Props) {
             <p
               className="
                 mt-1
-                text-[8px]
+                text-[7px]
                 uppercase
-                tracking-[0.24em]
-                text-cyan-200/70
+                tracking-[0.2em]
+                text-cyan-100/70
               "
             >
-              Pocket Card Arena
+              Pocket Arena
             </p>
           </div>
 
@@ -127,18 +112,19 @@ export default function Header({ turn, energy }: Props) {
             className="
               relative
               flex
-              h-[72px]
-              w-[76px]
+              h-[58px]
+              w-[64px]
+              shrink-0
               flex-col
               items-center
               justify-center
 
               overflow-hidden
-              rounded-[22px]
+              rounded-[18px]
               border
               border-cyan-300/20
 
-              bg-cyan-500/10
+              bg-cyan-400/10
             "
           >
             <div
@@ -153,9 +139,9 @@ export default function Header({ turn, energy }: Props) {
             <span
               className="
                 relative
-                text-[8px]
+                text-[7px]
                 uppercase
-                tracking-[0.24em]
+                tracking-[0.22em]
                 text-cyan-100
               "
             >
@@ -166,7 +152,7 @@ export default function Header({ turn, energy }: Props) {
               className="
                 relative
                 mt-1
-                text-[28px]
+                text-[22px]
                 font-black
                 leading-none
                 text-white

@@ -20,81 +20,60 @@ export default function ActionBar({
 }: Props) {
   if (currentPhase === "end") {
     return (
-      <footer
-        className="
-          sticky
-          bottom-0
-          z-40
-          shrink-0
-
-          px-2
-          pb-[max(12px,env(safe-area-inset-bottom))]
-          pt-2
-        "
-      >
+      <footer className="shrink-0">
         <div
           className="
-            overflow-hidden
-            rounded-[28px]
+            rounded-[24px]
             border
             border-white/10
-            bg-[linear-gradient(180deg,#1b2446_0%,#10182d_100%)]
 
-            p-3
+            bg-[#0c1324]/90
 
-            shadow-[0_16px_40px_rgba(0,0,0,.45)]
+            p-2
+
             backdrop-blur-xl
+
+            shadow-[0_12px_30px_rgba(0,0,0,.4)]
           "
         >
           <button
             onClick={onRestart}
             className="
-              relative
               w-full
-              overflow-hidden
 
-              rounded-[22px]
+              rounded-[18px]
               border
               border-emerald-300/20
 
-              bg-[linear-gradient(180deg,rgba(16,185,129,.35)_0%,rgba(5,150,105,.18)_100%)]
+              bg-emerald-500/15
 
-              py-4
+              py-3
+
+              active:scale-[0.98]
             "
           >
             <div
               className="
-                absolute
-                inset-0
-                bg-emerald-300/10
-                blur-2xl
+                text-[9px]
+                uppercase
+                tracking-[0.2em]
+                text-emerald-100
               "
-            />
+            >
+              Match Complete
+            </div>
 
-            <div className="relative">
-              <div
-                className="
-                  text-[10px]
-                  uppercase
-                  tracking-[0.24em]
-                  text-emerald-100
-                "
-              >
-                Match Complete
-              </div>
-
-              <div
-                className="
-                  mt-1
-                  text-lg
-                  font-black
-                  uppercase
-                  tracking-[0.08em]
-                  text-white
-                "
-              >
-                Play Again
-              </div>
+            <div
+              className="
+                mt-1
+                text-base
+                font-black
+                uppercase
+                tracking-[0.08em]
+                text-white
+              "
+            >
+              Play Again
             </div>
           </button>
         </div>
@@ -103,49 +82,35 @@ export default function ActionBar({
   }
 
   return (
-    <footer
-      className="
-        sticky
-        bottom-0
-        z-40
-        shrink-0
-
-        px-2
-        pb-[max(12px,env(safe-area-inset-bottom))]
-        pt-2
-      "
-    >
+    <footer className="shrink-0">
       <div
         className="
           relative
           flex
-          gap-3
+          gap-2
 
-          overflow-hidden
-          rounded-[28px]
+          rounded-[24px]
           border
           border-white/10
 
-          bg-[linear-gradient(180deg,#1b2446_0%,#10182d_100%)]
+          bg-[#0c1324]/92
 
-          p-3
+          p-2
 
-          shadow-[0_16px_40px_rgba(0,0,0,.45)]
           backdrop-blur-xl
+
+          shadow-[0_12px_30px_rgba(0,0,0,.45)]
         "
       >
-        {/* GLOW */}
+        {/* SHINE */}
         <div
           className="
             absolute
-            inset-x-0
-            top-[-40px]
-            mx-auto
-            h-[100px]
-            w-[180px]
-            rounded-full
-            bg-cyan-300/10
-            blur-3xl
+            inset-0
+
+            rounded-[24px]
+
+            bg-[linear-gradient(180deg,rgba(255,255,255,0.04),transparent)]
           "
         />
 
@@ -156,21 +121,23 @@ export default function ActionBar({
             relative
             flex-1
 
-            rounded-[20px]
+            rounded-[16px]
             border
             border-white/10
 
             bg-white/[0.04]
 
-            py-3
+            py-2.5
+
+            active:scale-[0.98]
           "
         >
           <div
             className="
-              text-xs
+              text-[10px]
               font-black
               uppercase
-              tracking-[0.16em]
+              tracking-[0.12em]
               text-zinc-200
             "
           >
@@ -184,15 +151,20 @@ export default function ActionBar({
           className="
             relative
             flex-[1.4]
+
             overflow-hidden
 
-            rounded-[20px]
+            rounded-[16px]
             border
             border-cyan-300/20
 
-            bg-[linear-gradient(180deg,rgba(34,211,238,.34)_0%,rgba(37,99,235,.18)_100%)]
+            bg-gradient-to-b
+            from-cyan-400/25
+            to-blue-500/20
 
-            py-3
+            py-2.5
+
+            active:scale-[0.98]
           "
         >
           <div
@@ -200,16 +172,16 @@ export default function ActionBar({
               absolute
               inset-0
               bg-cyan-300/10
-              blur-2xl
+              blur-xl
             "
           />
 
           <div className="relative">
             <div
               className="
-                text-[10px]
+                text-[9px]
                 uppercase
-                tracking-[0.25em]
+                tracking-[0.2em]
                 text-cyan-100
               "
             >
@@ -219,10 +191,10 @@ export default function ActionBar({
             <div
               className="
                 mt-1
-                text-sm
+                text-[13px]
                 font-black
                 uppercase
-                tracking-[0.1em]
+                tracking-[0.08em]
                 text-white
               "
             >

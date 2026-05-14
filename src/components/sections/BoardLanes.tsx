@@ -60,30 +60,32 @@ export default function BoardLanes({
           w-full
           justify-center
 
-          gap-[10px]
+          gap-2
+          sm:gap-3
 
-          rounded-[34px]
+          rounded-[28px]
           border
           border-white/10
 
-          bg-[#0b1222]/65
+          bg-[#0a1120]/70
 
-          px-3
-          py-4
+          px-2
+          py-3
 
           backdrop-blur-xl
 
-          shadow-[0_20px_60px_rgba(0,0,0,.45)]
+          shadow-[0_16px_40px_rgba(0,0,0,.45)]
         "
       >
         {/* INNER LIGHT */}
         <div
           className="
+            pointer-events-none
             absolute
             inset-0
-            rounded-[34px]
+            rounded-[28px]
+
             bg-[linear-gradient(180deg,rgba(255,255,255,0.05),transparent)]
-            pointer-events-none
           "
         />
 

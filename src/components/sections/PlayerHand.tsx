@@ -35,30 +35,32 @@ export default function PlayerHand({
   onTouchEnd,
 }: Props) {
   return (
-    <section className="w-full">
+    <section className="w-full shrink-0">
       <div
         className="
           relative
           overflow-hidden
 
-          rounded-[32px]
+          rounded-[28px]
           border
           border-white/10
 
-          bg-[linear-gradient(180deg,#182444_0%,#0b1020_100%)]
+          bg-[#0d1528]/90
 
-          px-2
-          py-4
+          px-1
+          py-3
 
-          shadow-[0_18px_50px_rgba(0,0,0,.45)]
+          backdrop-blur-xl
+
+          shadow-[0_16px_40px_rgba(0,0,0,.45)]
         "
       >
-        {/* SHINE */}
+        {/* LIGHT */}
         <div
           className="
             absolute
             inset-0
-            bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent)]
+            bg-[linear-gradient(180deg,rgba(255,255,255,0.05),transparent)]
           "
         />
 
@@ -66,7 +68,7 @@ export default function PlayerHand({
           className="
             relative
             flex
-            min-h-[92px]
+            min-h-[78px]
             items-end
             justify-center
           "
@@ -74,15 +76,15 @@ export default function PlayerHand({
           {cards.map((card, index) => {
             const total = cards.length;
 
-            const spread = total <= 3 ? 48 : total <= 5 ? 36 : 28;
+            const spread = total <= 3 ? 42 : total <= 5 ? 30 : 22;
 
-            const overlap = total <= 5 ? -20 : -28;
+            const overlap = total <= 5 ? -26 : -34;
 
             const centerOffset = index - (total - 1) / 2;
 
             const offset = centerOffset * spread;
 
-            const rotation = centerOffset * 4;
+            const rotation = centerOffset * 3.5;
 
             return (
               <div
@@ -92,12 +94,13 @@ export default function PlayerHand({
                   transition-all
                   duration-150
                   hover:z-50
-                  hover:-translate-y-3
+                  hover:-translate-y-2
                 "
                 style={{
                   transform: `
                     translateX(${offset}px)
                     rotate(${rotation}deg)
+                    scale(0.88)
                   `,
                   marginLeft: index === 0 ? 0 : overlap,
                   zIndex: index + 1,
