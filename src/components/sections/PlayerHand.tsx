@@ -35,49 +35,40 @@ export default function PlayerHand({
   onTouchEnd,
 }: Props) {
   return (
-    <section className="w-full pt-1">
+    <section className="w-full">
       <div
         className="
-relative
-overflow-hidden
+          relative
+          overflow-hidden
 
-rounded-[30px]
-border
-border-white/10
+          rounded-[32px]
+          border
+          border-white/10
 
-bg-gradient-to-b
-from-[#1b2344]
-to-[#0b1020]
+          bg-[linear-gradient(180deg,#182444_0%,#0b1020_100%)]
 
-px-2
-py-[clamp(16px,2vh,22px)]
+          px-2
+          py-4
 
-shadow-[0_18px_50px_rgba(0,0,0,.4)]
-"
+          shadow-[0_18px_50px_rgba(0,0,0,.45)]
+        "
       >
-        {/* GRID */}
+        {/* SHINE */}
         <div
           className="
             absolute
             inset-0
-            opacity-[0.05]
+            bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent)]
           "
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, white 1px, transparent 1px),
-              linear-gradient(to bottom, white 1px, transparent 1px)
-            `,
-            backgroundSize: "8px 8px",
-          }}
         />
 
         <div
           className="
             relative
             flex
+            min-h-[92px]
             items-end
             justify-center
-            min-h-[92px]
           "
         >
           {cards.map((card, index) => {
@@ -105,11 +96,10 @@ shadow-[0_18px_50px_rgba(0,0,0,.4)]
                 "
                 style={{
                   transform: `
- translateX(${offset}px)
- rotate(${rotation}deg)
- `,
+                    translateX(${offset}px)
+                    rotate(${rotation}deg)
+                  `,
                   marginLeft: index === 0 ? 0 : overlap,
-
                   zIndex: index + 1,
                 }}
               >

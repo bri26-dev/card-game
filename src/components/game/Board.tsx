@@ -3,6 +3,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+
 import { useGameStore } from "@/store/gameStore";
 
 import type { Card, Lane, LaneKey } from "@/engine/types";
@@ -19,13 +20,17 @@ import PlayerHand from "../sections/PlayerHand";
 import ActionBar from "../sections/ActionBar";
 
 import GameCard from "./GameCard";
+
 import CardPreview from "../preview/CardPreview";
 import LanePreview from "../preview/LanePreview";
 
 type PreviewLane = {
   name: string;
+
   description: string;
+
   image?: string;
+
   revealed?: boolean;
 };
 
@@ -91,12 +96,15 @@ export default function Board() {
 
       if (insideLane) {
         playCard("player1", draggingIndex, lane.id);
+
         break;
       }
     }
 
     setDraggingCard(null);
+
     setDraggingIndex(null);
+
     setIsDragging(false);
   };
 
@@ -142,35 +150,99 @@ export default function Board() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden text-white">
-      {/* BG */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#1f3b73_0%,#0f172d_38%,#090b13_100%)]" />
+    <div
+      className="
+        relative
+        min-h-screen
+        overflow-hidden
+        bg-[#060816]
+        text-white
+      "
+    >
+      {/* BACKGROUND */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div
+          className="
+            absolute
+            inset-0
+            bg-[radial-gradient(circle_at_top,#213a7d_0%,#10172d_35%,#050816_100%)]
+          "
+        />
 
-        <div className="absolute left-[-20%] top-[8%] h-[340px] w-[340px] rounded-full bg-cyan-400/10 blur-3xl" />
+        <div
+          className="
+            absolute
+            left-[-15%]
+            top-[8%]
+            h-[320px]
+            w-[320px]
+            rounded-full
+            bg-cyan-400/10
+            blur-3xl
+          "
+        />
 
-        <div className="absolute right-[-15%] bottom-[-10%] h-[300px] w-[300px] rounded-full bg-fuchsia-500/10 blur-3xl" />
+        <div
+          className="
+            absolute
+            right-[-15%]
+            bottom-[-10%]
+            h-[320px]
+            w-[320px]
+            rounded-full
+            bg-fuchsia-500/10
+            blur-3xl
+          "
+        />
+
+        {/* PIXEL GRID */}
+        <div
+          className="
+            absolute
+            inset-0
+            opacity-[0.04]
+          "
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, white 1px, transparent 1px),
+              linear-gradient(to bottom, white 1px, transparent 1px)
+            `,
+            backgroundSize: "10px 10px",
+          }}
+        />
       </div>
 
+      {/* MAIN */}
       <div
         className="
-        relative
-        z-10
-        mx-auto
-        flex
-        min-h-screen
-        w-full
-        max-w-[560px]
-        flex-col
-        px-[clamp(10px,3vw,18px)]
-        pt-[env(safe-area-inset-top)]
-        pb-5
-        gap-[clamp(12px,2vh,22px)]
-      "
+          relative
+          z-10
+          mx-auto
+          flex
+          min-h-screen
+          w-full
+          max-w-[560px]
+          flex-col
+
+          px-3
+          pt-[max(12px,env(safe-area-inset-top))]
+          pb-[max(20px,env(safe-area-inset-bottom))]
+
+          gap-3
+        "
       >
         <Header turn={gameState.turn} energy={player.energy} />
 
-        <div className="flex-1 flex items-center">
+        {/* BOARD AREA */}
+        <div
+          className="
+            flex
+            flex-1
+            items-center
+            justify-center
+            min-h-0
+          "
+        >
           <BoardLanes
             lanes={gameState.lanes}
             laneRefs={laneRefs}
@@ -186,6 +258,7 @@ export default function Board() {
           />
         </div>
 
+        {/* HAND */}
         {gameState.currentPhase !== "end" && (
           <PlayerHand
             cards={player.hand}
@@ -224,7 +297,9 @@ export default function Board() {
               if (deltaX > 10 || deltaY > 10) {
                 if (!isDragging) {
                   setDraggingCard(card);
+
                   setDraggingIndex(index);
+
                   setIsDragging(true);
                 }
               }
@@ -238,6 +313,7 @@ export default function Board() {
           />
         )}
 
+        {/* ACTION BAR */}
         <ActionBar
           currentPhase={gameState.currentPhase}
           onUndo={undoLastAction}
@@ -246,9 +322,14 @@ export default function Board() {
         />
       </div>
 
+      {/* DRAG CARD */}
       {draggingCard && (
         <div
-          className="pointer-events-none fixed z-[100]"
+          className="
+            pointer-events-none
+            fixed
+            z-[100]
+          "
           style={{
             left: touchPosition.x - 38,
             top: touchPosition.y - 55,
@@ -258,6 +339,7 @@ export default function Board() {
         </div>
       )}
 
+      {/* PREVIEWS */}
       {selectedCard && (
         <CardPreview
           card={selectedCard}

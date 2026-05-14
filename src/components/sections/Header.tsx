@@ -2,35 +2,46 @@
 
 type Props = {
   turn: number;
+
   energy: number;
 };
 
 export default function Header({ turn, energy }: Props) {
   return (
-    <header className="px-3 pb-2 pt-3">
+    <header className="pt-1">
       <div
         className="
           relative
           overflow-hidden
-          rounded-[28px]
+
+          rounded-[30px]
           border
           border-white/10
-          bg-gradient-to-b
-          from-[#1f2947]
-          via-[#121827]
-          to-[#0a0d18]
-          px-3
-          py-3
-          shadow-[0_10px_40px_rgba(0,0,0,0.45)]
+
+          bg-[linear-gradient(180deg,#1c2950_0%,#10182d_50%,#0b1020_100%)]
+
+          px-4
+          py-4
+
+          shadow-[0_18px_50px_rgba(0,0,0,0.45)]
+          backdrop-blur-xl
         "
       >
-        {/* PIXEL GRID */}
+        {/* GLOW */}
         <div
           className="
-            pointer-events-none
             absolute
             inset-0
-            opacity-[0.06]
+            bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_65%)]
+          "
+        />
+
+        {/* GRID */}
+        <div
+          className="
+            absolute
+            inset-0
+            opacity-[0.05]
           "
           style={{
             backgroundImage: `
@@ -46,16 +57,18 @@ export default function Header({ turn, energy }: Props) {
           <div
             className="
               flex
-              h-[66px]
-              w-[72px]
+              h-[72px]
+              w-[76px]
               flex-col
               items-center
               justify-center
-              rounded-[20px]
+
+              rounded-[22px]
               border
               border-white/10
-              bg-[#0c1120]
-              shadow-inner
+
+              bg-black/25
+              backdrop-blur-md
             "
           >
             <span
@@ -72,7 +85,7 @@ export default function Header({ turn, energy }: Props) {
             <span
               className="
                 mt-1
-                text-[26px]
+                text-[28px]
                 font-black
                 leading-none
                 text-white
@@ -86,14 +99,14 @@ export default function Header({ turn, energy }: Props) {
           <div className="text-center">
             <h1
               className="
-                text-[15px]
+                text-[16px]
                 font-black
                 uppercase
                 tracking-[0.18em]
                 text-white
               "
             >
-              CARD BATTLE
+              PIXEL DUEL
             </h1>
 
             <p
@@ -102,10 +115,10 @@ export default function Header({ turn, energy }: Props) {
                 text-[8px]
                 uppercase
                 tracking-[0.24em]
-                text-blue-200/60
+                text-cyan-200/70
               "
             >
-              Pixel Strategy
+              Pocket Card Arena
             </p>
           </div>
 
@@ -114,18 +127,18 @@ export default function Header({ turn, energy }: Props) {
             className="
               relative
               flex
-              h-[66px]
-              w-[72px]
+              h-[72px]
+              w-[76px]
               flex-col
               items-center
               justify-center
+
               overflow-hidden
-              rounded-[20px]
+              rounded-[22px]
               border
-              border-cyan-400/20
-              bg-gradient-to-b
-              from-cyan-500/20
-              to-blue-500/10
+              border-cyan-300/20
+
+              bg-cyan-500/10
             "
           >
             <div
@@ -153,7 +166,7 @@ export default function Header({ turn, energy }: Props) {
               className="
                 relative
                 mt-1
-                text-[26px]
+                text-[28px]
                 font-black
                 leading-none
                 text-white
