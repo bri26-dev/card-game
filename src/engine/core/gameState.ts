@@ -1,4 +1,11 @@
-import { Card, GameState, Lane, LaneKey, Player, PlayerId } from "../types";
+import {
+  Card,
+  GameState,
+  Lane,
+  LaneKey,
+  Player,
+  PlayerId,
+} from "../types/types";
 
 import { lanePool } from "@/data/lanes";
 

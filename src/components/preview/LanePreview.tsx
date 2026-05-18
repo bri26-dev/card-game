@@ -68,10 +68,11 @@ export default function LanePreview({ lane, onClose }: Props) {
             alt={lane.name}
             fill
             priority
+            sizes="(max-width: 768px) 100vw, 430px"
             className="
-              object-cover
-              object-center
-            "
+    object-cover
+    object-center
+  "
           />
 
           {/* TOP OVERLAY */}

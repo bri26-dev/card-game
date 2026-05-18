@@ -1,6 +1,6 @@
 // data/assets/lanes.ts
 
-import { LaneEffect, LaneTrigger } from "@/engine/types";
+import { LaneEffect, LaneTrigger } from "@/engine/types/types";
 
 export type LaneTemplate = {
   name: string;
@@ -20,7 +20,7 @@ export const lanePool: LaneTemplate[] = [
 
     image: "/assets/lanes/plains.png",
 
-    description: "A calm open field with no special effects.",
+    description: "No special effects.",
   },
 
   {
@@ -28,7 +28,7 @@ export const lanePool: LaneTemplate[] = [
 
     image: "/assets/lanes/village.png",
 
-    description: "A peaceful settlement untouched by battle.",
+    description: "No special effects.",
   },
 
   {

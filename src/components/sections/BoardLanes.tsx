@@ -1,6 +1,6 @@
 // components/sections/BoardLanes.tsx
 
-import type { Card, Lane, LaneKey } from "@/engine/types";
+import type { Card, Lane, LaneKey } from "@/engine/types/types";
 
 import GameLane from "../game/GameLane";
 

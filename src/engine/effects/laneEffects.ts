@@ -1,4 +1,4 @@
-import { Card, GameState, LaneTrigger } from "../types";
+import { Card, GameState, LaneTrigger } from "../types/types";
 
 import { getLaneWinner } from "../core/cardActions";
 

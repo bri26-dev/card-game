@@ -6,7 +6,7 @@ import { useMemo, useRef, useState } from "react";
 
 import { useGameStore } from "@/store/gameStore";
 
-import type { Card, Lane, LaneKey } from "@/engine/types";
+import type { Card, Lane, LaneKey } from "@/engine/types/types";
 
 import {
   getGameWinner,
@@ -34,7 +34,11 @@ type PreviewLane = {
   revealed?: boolean;
 };
 
-export default function Board() {
+type Props = {
+  onReturnToMenu?: () => void;
+};
+
+export default function Board({ onReturnToMenu }: Props) {
   const {
     gameState,
     playCard,
@@ -42,6 +46,8 @@ export default function Board() {
     endTurn,
     restartGame,
     undoLastAction,
+    surrenderGame,
+    canUndo,
   } = useGameStore();
 
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
@@ -239,13 +245,21 @@ export default function Board() {
         </div>
 
         {/* HAND */}
-        {gameState.currentPhase !== "end" && (
+        <div
+          className="
+    transition-opacity
+    duration-300
+  "
+        >
           <PlayerHand
             cards={player.hand}
             draggingIndex={draggingIndex}
             isDragging={isDragging}
+            disableDragging={gameState.currentPhase === "end"}
             onCardPreview={setSelectedCard}
             onTouchStart={(event) => {
+              if (gameState.currentPhase === "end") return;
+
               const touch = event.touches[0];
 
               setTouchPosition({
@@ -260,6 +274,8 @@ export default function Board() {
                 touch.clientY.toString();
             }}
             onTouchMove={(event, card, index) => {
+              if (gameState.currentPhase === "end") return;
+
               const touch = event.touches[0];
 
               const startX = Number(
@@ -289,16 +305,23 @@ export default function Board() {
                 y: touch.clientY,
               });
             }}
-            onTouchEnd={handleLaneDrop}
+            onTouchEnd={() => {
+              if (gameState.currentPhase === "end") return;
+
+              handleLaneDrop();
+            }}
           />
-        )}
+        </div>
 
         {/* ACTION BAR */}
         <ActionBar
           currentPhase={gameState.currentPhase}
+          canUndo={canUndo()}
           onUndo={undoLastAction}
+          onSurrender={surrenderGame}
           onEndTurn={endTurn}
           onRestart={restartGame}
+          onReturnToMenu={onReturnToMenu}
         />
       </div>
 

@@ -1,4 +1,4 @@
-import { GameState } from "../types";
+import { GameState } from "../types/types";
 
 export function recalculatePower(state: GameState) {
   for (const player of Object.values(state.players)) {

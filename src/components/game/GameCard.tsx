@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import type { TouchEvent } from "react";
 
-import type { Card } from "@/engine/types";
+import type { Card } from "@/engine/types/types";
 
 import { getCardPower } from "@/engine/utils/card.utils";
 
@@ -76,10 +76,11 @@ export default function GameCard({
           src={card.image || "/assets/cards/fallback.png"}
           alt={card.name}
           fill
+          sizes="74px"
           className="
-            object-cover
-            pixelated
-          "
+    object-cover
+    pixelated
+  "
         />
 
         <div

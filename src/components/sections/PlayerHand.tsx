@@ -2,7 +2,7 @@
 
 import type { TouchEvent } from "react";
 
-import type { Card } from "@/engine/types";
+import type { Card } from "@/engine/types/types";
 
 import GameCard from "../game/GameCard";
 
@@ -12,6 +12,8 @@ type Props = {
   draggingIndex: number | null;
 
   isDragging: boolean;
+
+  disableDragging?: boolean;
 
   onCardPreview: (card: Card) => void;
 
@@ -33,7 +35,38 @@ export default function PlayerHand({
   onTouchStart,
   onTouchMove,
   onTouchEnd,
+  disableDragging,
 }: Props) {
+  const total = cards.length;
+
+  /**
+   * DYNAMIC HAND SPACING
+   *
+   * Instead of overflowing outside screen width,
+   * cards compress inward smoothly as hand grows.
+   */
+
+  const getSpacing = () => {
+    if (total <= 3) return 58;
+
+    if (total === 4) return 48;
+
+    if (total === 5) return 40;
+
+    if (total === 6) return 32;
+
+    if (total === 7) return 24;
+
+    return 18;
+  };
+
+  const spacing = getSpacing();
+
+  const rotationStrength =
+    total <= 4 ? 4 : total <= 6 ? 3 : total <= 8 ? 2 : 1.5;
+
+  const scale = total <= 5 ? 0.92 : total <= 7 ? 0.86 : total <= 9 ? 0.8 : 0.74;
+
   return (
     <section className="w-full shrink-0">
       <div
@@ -41,7 +74,7 @@ export default function PlayerHand({
           relative
           overflow-hidden
 
-          px-1
+          px-2
           py-3
         "
       >
@@ -49,50 +82,71 @@ export default function PlayerHand({
           className="
             relative
             flex
-            min-h-[78px]
+            min-h-[92px]
             items-end
             justify-center
           "
         >
           {cards.map((card, index) => {
-            const total = cards.length;
-
-            const spread = total <= 3 ? 42 : total <= 5 ? 30 : 22;
-
-            const overlap = total <= 5 ? -26 : -34;
-
             const centerOffset = index - (total - 1) / 2;
 
-            const offset = centerOffset * spread;
+            const offsetX = centerOffset * spacing;
 
-            const rotation = centerOffset * 3.5;
+            const rotation = centerOffset * rotationStrength;
+
+            const normalized =
+              total <= 1 ? 0 : centerOffset / ((total - 1) / 2);
+
+            /**
+             * SMOOTH SNAP-LIKE ARC
+             */
+            const raise = Math.pow(Math.abs(normalized), 1.7) * 14;
 
             return (
               <div
                 key={card.id}
                 className="
                   relative
+
                   transition-all
-                  duration-150
+                  duration-300
+                  ease-out
+
                   hover:z-50
-                  hover:-translate-y-2
+                  hover:-translate-y-4
                 "
                 style={{
                   transform: `
-                    translateX(${offset}px)
+                    translateX(${offsetX}px)
+                    translateY(${raise}px)
                     rotate(${rotation}deg)
-                    scale(0.88)
+                    scale(${scale})
                   `,
-                  marginLeft: index === 0 ? 0 : overlap,
+                  marginLeft: index === 0 ? 0 : -52,
                   zIndex: index + 1,
                 }}
               >
-                <div className={draggingIndex === index ? "opacity-0" : ""}>
+                <div
+                  className={`
+                    transition-all
+                    duration-200
+
+                    ${
+                      draggingIndex === index
+                        ? "scale-95 opacity-0"
+                        : "opacity-100"
+                    }
+                  `}
+                >
                   <GameCard
                     card={card}
-                    onTouchStart={onTouchStart}
-                    onTouchMove={(event) => onTouchMove(event, card, index)}
-                    onTouchEnd={onTouchEnd}
+                    onTouchStart={disableDragging ? undefined : onTouchStart}
+                    onTouchMove={
+                      disableDragging
+                        ? undefined
+                        : (event) => onTouchMove(event, card, index)
+                    }
+                    onTouchEnd={disableDragging ? undefined : onTouchEnd}
                     onClick={() => onCardPreview(card)}
                   />
                 </div>

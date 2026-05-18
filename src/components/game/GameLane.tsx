@@ -3,7 +3,7 @@
 import Image from "next/image";
 import type { MutableRefObject } from "react";
 
-import type { Card, Lane, LaneKey } from "@/engine/types";
+import type { Card, Lane, LaneKey } from "@/engine/types/types";
 
 import GameCard from "./GameCard";
 
@@ -55,18 +55,32 @@ export default function GameLane({
 }: Props) {
   const isMoveTarget = movingCard !== null && movingCard?.fromLane !== lane.id;
 
-  const enemySlots: (Card | null)[] = [
-    enemyCards[0] ?? null,
-    enemyCards[1] ?? null,
-    enemyCards[2] ?? null,
-    enemyCards[3] ?? null,
-  ];
+  /**
+   * PLAYER NORMAL ORDER
+   *
+   * [0][1]
+   * [2][3]
+   */
 
   const playerSlots: (Card | null)[] = [
     playerCards[0] ?? null,
     playerCards[1] ?? null,
     playerCards[2] ?? null,
     playerCards[3] ?? null,
+  ];
+
+  /**
+   * ENEMY MIRRORED ORDER
+   *
+   * [2][3]
+   * [0][1]
+   */
+
+  const enemySlots: (Card | null)[] = [
+    enemyCards[2] ?? null,
+    enemyCards[3] ?? null,
+    enemyCards[0] ?? null,
+    enemyCards[1] ?? null,
   ];
 
   const displayedImage = lane.revealed
@@ -262,6 +276,7 @@ export default function GameLane({
             src={displayedImage}
             alt={lane.name}
             fill
+            sizes="(max-width: 640px) 124px, 116px"
             className="
               object-cover
               opacity-90

@@ -1,4 +1,4 @@
-import { GameState, LaneKey, Player, PlayerId } from "../types";
+import { GameState, LaneKey, Player, PlayerId } from "../types/types";
 import { getCardPower } from "../utils/card.utils";
 
 export function drawCard(state: GameState, playerId: PlayerId) {

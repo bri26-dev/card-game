@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { GameState, LaneKey, PlayerId } from "@/engine/types";
+import { GameState, LaneKey, PlayerId } from "@/engine/types/types";
 
 import { starterCards } from "@/data/cards";
 
@@ -46,6 +46,10 @@ interface GameStore {
   undoLastAction: () => void;
 
   restartGame: () => void;
+
+  surrenderGame: () => void; // ADDED
+
+  canUndo: () => boolean;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -80,6 +84,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       history: [],
     });
   },
+
   playCard: (playerId, handIndex, targetLane) => {
     const { gameState, history } = get();
 
@@ -139,12 +144,29 @@ export const useGameStore = create<GameStore>((set, get) => ({
     });
   },
 
+  canUndo: () => {
+    return get().history.length > 0;
+  },
+
+  // ONLY ADDED THIS
+  surrenderGame: () => {
+    const { gameState } = get();
+
+    if (!gameState) return;
+
+    const nextState = structuredClone(gameState);
+
+    nextState.currentPhase = "end";
+
+    set({
+      gameState: nextState,
+      history: [],
+    });
+  },
+
   restartGame: () => {
     get().initializeGame();
   },
-
-  // store/gameStore.ts
-  // ONLY REPLACE THE endTurn FUNCTION
 
   endTurn: () => {
     const { gameState } = get();

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import type { Card } from "@/engine/types";
+import type { Card } from "@/engine/types/types";
 
 import { getCardPower } from "@/engine/utils/card.utils";
 
@@ -27,9 +27,9 @@ export default function CardPreview({ card, onClose }: Props) {
         flex
         items-center
         justify-center
-        bg-black/80
+        bg-[#050816]/45
         p-4
-        backdrop-blur-md
+        backdrop-blur-[8px]
       "
     >
       <div
@@ -50,6 +50,7 @@ export default function CardPreview({ card, onClose }: Props) {
           src={card.image || "/assets/cards/fallback.png"}
           alt={card.name}
           fill
+          sizes="360px"
           className="object-cover pixelated"
         />
 

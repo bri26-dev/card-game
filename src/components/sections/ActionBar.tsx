@@ -1,40 +1,47 @@
 // components/sections/ActionBar.tsx
 
-import type { TurnPhase } from "@/engine/types";
+import type { TurnPhase } from "@/engine/types/types";
 
 type Props = {
   currentPhase: TurnPhase;
 
+  canUndo: boolean;
+
   onUndo: () => void;
+
+  onSurrender: () => void;
 
   onEndTurn: () => void;
 
   onRestart: () => void;
+
+  onReturnToMenu?: () => void;
 };
 
 export default function ActionBar({
   currentPhase,
+  canUndo,
   onUndo,
+  onSurrender,
   onEndTurn,
   onRestart,
+  onReturnToMenu,
 }: Props) {
   if (currentPhase === "end") {
     return (
-      <footer className="shrink-0">
-        <div className="p-2">
-          <button
-            onClick={onRestart}
-            className="
-              w-full
+      <footer className="shrink-0 h-[88px]">
+        <div className="flex gap-2 p-2">
+          {/* MENU */}
 
+          <button
+            onClick={onReturnToMenu}
+            className="
+              flex-1
               rounded-[18px]
               border
-              border-emerald-300/20
-
-              bg-emerald-500/15
-
+              border-white/10
+              bg-white/[0.04]
               py-3
-
               active:scale-[0.98]
             "
           >
@@ -43,23 +50,71 @@ export default function ActionBar({
                 text-[9px]
                 uppercase
                 tracking-[0.2em]
-                text-emerald-100
+                text-zinc-300
               "
             >
-              Match Complete
+              Exit Match
             </div>
 
             <div
               className="
-                mt-1
                 text-base
                 font-black
                 uppercase
-                tracking-[0.08em]
                 text-white
               "
             >
-              Play Again
+              Main Menu
+            </div>
+          </button>
+
+          {/* AGAIN */}
+
+          <button
+            onClick={onRestart}
+            className="
+              relative
+              flex-[1.2]
+              overflow-hidden
+              rounded-[18px]
+              border
+              border-emerald-300/20
+              bg-emerald-500/15
+              py-3
+              active:scale-[0.98]
+            "
+          >
+            <div
+              className="
+                absolute
+                inset-0
+                bg-emerald-300/10
+                blur-xl
+              "
+            />
+
+            <div className="relative">
+              <div
+                className="
+                  text-[9px]
+                  uppercase
+                  tracking-[0.2em]
+                  text-emerald-100
+                "
+              >
+                Match Complete
+              </div>
+
+              <div
+                className="
+                  text-base
+                  font-black
+                  uppercase
+                  text-white
+                "
+              >
+                Play Again
+              </div>
             </div>
           </button>
         </div>
@@ -68,33 +123,39 @@ export default function ActionBar({
   }
 
   return (
-    <footer className="shrink-0">
+    <footer className="shrink-0 h-[88px]">
       <div
         className="
           relative
           flex
           gap-2
-
           p-2
         "
       >
-        {/* UNDO */}
+        {/* LEFT BUTTON */}
+
         <button
-          onClick={onUndo}
-          className="
+          onClick={canUndo ? onUndo : onSurrender}
+          className={`
             relative
             flex-1
-
             rounded-[16px]
-            border
-            border-white/10
-
-            bg-white/[0.04]
-
             py-2.5
-
             active:scale-[0.98]
-          "
+            border
+
+            ${
+              canUndo
+                ? `
+                  border-white/10
+                  bg-white/[0.04]
+                `
+                : `
+                  border-red-400/20
+                  bg-red-500/15
+                `
+            }
+          `}
         >
           <div
             className="
@@ -102,32 +163,28 @@ export default function ActionBar({
               font-black
               uppercase
               tracking-[0.12em]
-              text-zinc-200
+              text-white
             "
           >
-            Undo
+            {canUndo ? "Undo" : "Surrender"}
           </div>
         </button>
 
         {/* END TURN */}
+
         <button
           onClick={onEndTurn}
           className="
             relative
             flex-[1.4]
-
             overflow-hidden
-
             rounded-[16px]
             border
             border-cyan-300/20
-
             bg-gradient-to-b
             from-cyan-400/25
             to-blue-500/20
-
             py-2.5
-
             active:scale-[0.98]
           "
         >
@@ -154,11 +211,9 @@ export default function ActionBar({
 
             <div
               className="
-                mt-1
                 text-[13px]
                 font-black
                 uppercase
-                tracking-[0.08em]
                 text-white
               "
             >

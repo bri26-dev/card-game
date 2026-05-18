@@ -1,6 +1,6 @@
 // data/assets/cards.ts
 
-import { Card } from "@/engine/types";
+import { Card } from "@/engine/types/types";
 
 type CardTemplate = Omit<Card, "basePower" | "modifier"> & {
   image: string;

@@ -1,4 +1,4 @@
-import { Card, GameState, LaneKey, PlayerId } from "../types";
+import { Card, GameState, LaneKey, PlayerId } from "../types/types";
 
 import { drawCard } from "../core/cardActions";
 

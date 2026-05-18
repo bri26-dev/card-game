@@ -1,4 +1,4 @@
-import { GameState, LaneKey, PlayerId } from "../types";
+import { GameState, LaneKey, PlayerId } from "../types/types";
 
 import { applyCardEffect } from "../effects/cardEffects";
 
