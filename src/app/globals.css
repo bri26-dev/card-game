@@ -97,3 +97,66 @@ body {
   background: rgba(255, 255, 255, 0.14);
   border-radius: 999px;
 }
+
+@keyframes card-draw-in {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.82) rotate(-7deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes card-play-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.6);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes lane-reveal-in {
+  0% {
+    filter: brightness(0.4) blur(4px);
+    transform: scale(0.98);
+  }
+  100% {
+    filter: brightness(1) blur(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes card-idle-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.anim-card-draw {
+  animation: card-draw-in 320ms cubic-bezier(0.18, 0.8, 0.24, 1) both;
+}
+
+.anim-card-play {
+  animation: card-play-in 280ms cubic-bezier(0.2, 0.85, 0.25, 1) both;
+}
+
+.anim-lane-reveal {
+  animation: lane-reveal-in 420ms ease-out both;
+}
+
+.anim-card-idle {
+  animation: card-idle-float 2.2s ease-in-out infinite;
+}
