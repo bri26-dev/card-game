@@ -1,6 +1,7 @@
 // components/game/GameLane.tsx
 
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import type { MutableRefObject } from "react";
 
 import type { Card, Lane, LaneKey } from "@/engine/types";
@@ -53,6 +54,17 @@ export default function GameLane({
   onMoveCard,
   onSelectMoveCard,
 }: Props) {
+  const [hasRevealAnimation, setHasRevealAnimation] = useState(false);
+  const wasRevealedRef = useRef(lane.revealed);
+
+  useEffect(() => {
+    if (!wasRevealedRef.current && lane.revealed) {
+      setHasRevealAnimation(true);
+    }
+
+    wasRevealedRef.current = lane.revealed;
+  }, [lane.revealed]);
+
   const isMoveTarget = movingCard !== null && movingCard?.fromLane !== lane.id;
 
   const enemySlots: (Card | null)[] = [
@@ -104,7 +116,8 @@ export default function GameLane({
           gap-[6px]
         "
       >
-        {enemySlots.map((card, index) => (
+        {enemySlots.map((card, index) => {
+          return (
           <div
             key={`enemy-${index}`}
             className="
@@ -119,14 +132,18 @@ export default function GameLane({
             "
           >
             {card ? (
-              <div className="scale-[0.54] sm:scale-[0.57]">
+              <div
+                key={card.id}
+                className="anim-card-play scale-[0.54] sm:scale-[0.57]"
+                style={{ animationDelay: `${index * 45}ms` }}
+              >
                 <GameCard card={card} onClick={() => onCardSelect(card)} />
               </div>
             ) : (
               <div className="h-[60px] w-[44px] sm:h-[66px] sm:w-[46px]" />
             )}
           </div>
-        ))}
+        )})}
       </div>
 
       {/* LOCATION */}
@@ -262,7 +279,7 @@ export default function GameLane({
             src={displayedImage}
             alt={lane.name}
             fill
-            className="
+            className={`
               object-cover
               opacity-90
 
@@ -270,7 +287,8 @@ export default function GameLane({
               duration-300
 
               group-hover:scale-105
-            "
+              ${hasRevealAnimation ? "anim-lane-reveal" : ""}
+            `}
           />
 
           {/* OVERLAY */}
@@ -360,7 +378,8 @@ export default function GameLane({
           gap-[6px]
         "
       >
-        {playerSlots.map((card, index) => (
+        {playerSlots.map((card, index) => {
+          return (
           <div
             key={`player-${index}`}
             className="
@@ -375,7 +394,11 @@ export default function GameLane({
             "
           >
             {card ? (
-              <div className="scale-[0.54] sm:scale-[0.57]">
+              <div
+                key={card.id}
+                className="anim-card-play scale-[0.54] sm:scale-[0.57]"
+                style={{ animationDelay: `${index * 45}ms` }}
+              >
                 <GameCard
                   card={card}
                   onClick={() => {
@@ -396,7 +419,7 @@ export default function GameLane({
               <div className="h-[60px] w-[44px] sm:h-[66px] sm:w-[46px]" />
             )}
           </div>
-        ))}
+        )})}
       </div>
     </div>
   );

@@ -70,13 +70,15 @@ export default function PlayerHand({
             return (
               <div
                 key={card.id}
-                className="
+                className={`
                   relative
                   transition-all
                   duration-150
                   hover:z-50
                   hover:-translate-y-2
-                "
+                  anim-card-idle
+                  anim-card-draw
+                `}
                 style={{
                   transform: `
                     translateX(${offset}px)
@@ -85,6 +87,7 @@ export default function PlayerHand({
                   `,
                   marginLeft: index === 0 ? 0 : overlap,
                   zIndex: index + 1,
+                  animationDelay: `${index * 40}ms`,
                 }}
               >
                 <div className={draggingIndex === index ? "opacity-0" : ""}>
