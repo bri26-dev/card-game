@@ -34,6 +34,8 @@ export default function Login({
 
   const [submitted, setSubmitted] = useState(false);
 
+  const [authLoading, setAuthLoading] = useState(false);
+
   const usernameError = useMemo(() => {
     if (!username.trim()) {
       return "Please enter a username.";
@@ -82,29 +84,29 @@ export default function Login({
       return;
     }
 
-    if (isRegister) {
-      onRegister(username.trim(), password.trim());
+    setAuthLoading(true);
 
-      /*
-      AUTO RETURN TO LOGIN AFTER REGISTER
-    */
+    setTimeout(() => {
+      if (isRegister) {
+        onRegister(username.trim(), password.trim());
 
-      setIsRegister(false);
+        setIsRegister(false);
 
-      /*
-      CLEAR INPUTS
-    */
+        setUsername("");
 
-      setUsername("");
+        setPassword("");
 
-      setPassword("");
+        setSubmitted(false);
 
-      setSubmitted(false);
+        setAuthLoading(false);
 
-      return;
-    }
+        return;
+      }
 
-    onLogin(username.trim(), password.trim());
+      onLogin(username.trim(), password.trim());
+
+      setAuthLoading(false);
+    }, 700);
   };
 
   const handleSwitchMode = () => {
@@ -120,6 +122,33 @@ export default function Login({
 
     clearAuthSuccess();
   };
+
+  if (authLoading) {
+    return (
+      <div
+        className="
+        flex
+        min-h-screen
+        items-center
+        justify-center
+        bg-[#05070d]
+      "
+      >
+        <div
+          className="
+          animate-pulse
+          text-sm
+          font-medium
+          uppercase
+          tracking-[0.3em]
+          text-zinc-500
+        "
+        >
+          {isRegister ? "Creating Account..." : "Signing In..."}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

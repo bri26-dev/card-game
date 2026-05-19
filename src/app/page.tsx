@@ -11,6 +11,8 @@ import MainMenu from "@/components/menu/MainMenu";
 import { useAccountStore } from "@/store/accountStore";
 import { useGameStore } from "@/store/gameStore";
 
+import LoadingScreen from "@/components/ui/LoadingScreen";
+
 export default function Home() {
   const initializeGame = useGameStore((state) => state.initializeGame);
 
@@ -35,8 +37,27 @@ export default function Home() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#05070d] text-sm text-zinc-400">
-        Loading...
+      <main
+        className="
+        flex
+        min-h-screen
+        items-center
+        justify-center
+        bg-[#05070d]
+      "
+      >
+        <div
+          className="
+          animate-pulse
+          text-sm
+          font-medium
+          uppercase
+          tracking-[0.3em]
+          text-zinc-500
+        "
+        >
+          Loading...
+        </div>
       </main>
     );
   }

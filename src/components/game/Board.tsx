@@ -24,6 +24,10 @@ import GameCard from "./GameCard";
 import CardPreview from "../preview/CardPreview";
 import LanePreview from "../preview/LanePreview";
 
+import LoadingScreen from "@/components/ui/LoadingScreen";
+
+import ConfirmModal from "@/components/ui/ConfirmModal";
+
 type PreviewLane = {
   name: string;
 
@@ -71,6 +75,14 @@ export default function Board({ onReturnToMenu }: Props) {
   const [isDragging, setIsDragging] = useState(false);
 
   const [showWinnerBanner, setShowWinnerBanner] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+
+  const [showSurrenderConfirm, setShowSurrenderConfirm] = useState(false);
+
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+
+  const [loadingText, setLoadingText] = useState("");
 
   const laneRefs = {
     lane1: useRef<HTMLDivElement>(null),
@@ -440,10 +452,86 @@ export default function Board({ onReturnToMenu }: Props) {
           currentPhase={gameState.currentPhase}
           canUndo={canUndo()}
           onUndo={undoLastAction}
-          onSurrender={surrenderGame}
+          onSurrender={() => setShowSurrenderConfirm(true)}
           onEndTurn={endTurn}
-          onRestart={restartGame}
-          onReturnToMenu={onReturnToMenu}
+          onRestart={() => {
+            setLoadingText("fancy");
+
+            setLoading(true);
+
+            restartGame();
+
+            setTimeout(() => {
+              setLoading(false);
+            }, 900);
+          }}
+          onReturnToMenu={() => {
+            setShowExitConfirm(true);
+          }}
+        />
+        {loading &&
+          (loadingText === "simple" ? (
+            <div
+              className="
+        fixed
+        inset-0
+        z-[200]
+        flex
+        items-center
+        justify-center
+        bg-[#05070d]
+      "
+            >
+              <div
+                className="
+          animate-pulse
+          text-sm
+          font-medium
+          uppercase
+          tracking-[0.3em]
+          text-zinc-500
+        "
+              >
+                Loading...
+              </div>
+            </div>
+          ) : (
+            <LoadingScreen text="Preparing Match..." />
+          ))}
+
+        <ConfirmModal
+          open={showSurrenderConfirm}
+          title="Surrender Match"
+          description="Are you sure you want to surrender this battle?"
+          confirmText="Surrender"
+          cancelText="Cancel"
+          danger
+          onCancel={() => setShowSurrenderConfirm(false)}
+          onConfirm={() => {
+            setShowSurrenderConfirm(false);
+
+            surrenderGame();
+          }}
+        />
+
+        <ConfirmModal
+          open={showExitConfirm}
+          title="Return to Menu"
+          description="Leave the current match and return to menu?"
+          confirmText="Exit"
+          cancelText="Stay"
+          onCancel={() => setShowExitConfirm(false)}
+          onConfirm={() => {
+            setShowExitConfirm(false);
+
+            setLoading(true);
+
+            setTimeout(() => {
+              onReturnToMenu?.();
+
+              setLoading(false);
+            }, 700);
+          }}
         />
       </div>
 

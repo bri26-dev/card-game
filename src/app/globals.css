@@ -201,3 +201,13 @@ body {
 ::selection {
   background: rgba(77, 163, 255, 0.28);
 }
+
+@keyframes loading {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(220%);
+  }
+}
