@@ -1,27 +1,31 @@
+// app/page.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
 
 import Board from "@/components/game/Board";
-
+import Login from "@/components/menu/Login";
 import MainMenu from "@/components/menu/MainMenu";
 
-import CreateAccountModal from "@/components/menu/Login";
-
-import { useGameStore } from "@/store/gameStore";
-
 import { useAccountStore } from "@/store/accountStore";
+import { useGameStore } from "@/store/gameStore";
 
 export default function Home() {
   const initializeGame = useGameStore((state) => state.initializeGame);
 
-  const account = useAccountStore((state) => state.account);
-
-  const loadAccount = useAccountStore((state) => state.loadAccount);
-
-  const createAccount = useAccountStore((state) => state.createAccount);
-
-  const logout = useAccountStore((state) => state.logout);
+  const {
+    account,
+    loading,
+    authError,
+    authSuccess,
+    loadAccount,
+    login,
+    register,
+    logout,
+    clearAuthError,
+    clearAuthSuccess,
+  } = useAccountStore();
 
   const [started, setStarted] = useState(false);
 
@@ -29,9 +33,24 @@ export default function Home() {
     loadAccount();
   }, [loadAccount]);
 
+  if (loading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#05070d] text-sm text-zinc-400">
+        Loading...
+      </main>
+    );
+  }
+
   if (!account) {
     return (
-      <CreateAccountModal onCreate={(username) => createAccount(username)} />
+      <Login
+        onLogin={login}
+        onRegister={register}
+        authError={authError}
+        authSuccess={authSuccess}
+        clearAuthError={clearAuthError}
+        clearAuthSuccess={clearAuthSuccess}
+      />
     );
   }
 
@@ -53,10 +72,12 @@ export default function Home() {
 
             setStarted(true);
           }}
-          onLogout={() => {
-            logout();
-
-            setStarted(false);
+          onLogout={logout}
+          onDecks={() => {
+            alert("Deck Builder Coming Soon");
+          }}
+          onCollection={() => {
+            alert("Collection Coming Soon");
           }}
         />
       ) : (

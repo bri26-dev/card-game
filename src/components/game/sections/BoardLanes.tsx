@@ -2,7 +2,7 @@
 
 import type { Card, Lane, LaneKey } from "@/engine/types/types";
 
-import GameLane from "../game/GameLane";
+import GameLane from "../GameLane";
 
 type Props = {
   lanes: Lane[];

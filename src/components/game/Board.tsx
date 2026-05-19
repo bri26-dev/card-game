@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useGameStore } from "@/store/gameStore";
 
@@ -14,10 +14,10 @@ import {
   getLaneWinner,
 } from "@/engine/core/cardActions";
 
-import Header from "../sections/Header";
-import BoardLanes from "../sections/BoardLanes";
-import PlayerHand from "../sections/PlayerHand";
-import ActionBar from "../sections/ActionBar";
+import Header from "./sections/Header";
+import BoardLanes from "./sections/BoardLanes";
+import PlayerHand from "./sections/PlayerHand";
+import ActionBar from "./sections/ActionBar";
 
 import GameCard from "./GameCard";
 
@@ -70,6 +70,8 @@ export default function Board({ onReturnToMenu }: Props) {
 
   const [isDragging, setIsDragging] = useState(false);
 
+  const [showWinnerBanner, setShowWinnerBanner] = useState(false);
+
   const laneRefs = {
     lane1: useRef<HTMLDivElement>(null),
     lane2: useRef<HTMLDivElement>(null),
@@ -81,6 +83,38 @@ export default function Board({ onReturnToMenu }: Props) {
 
     return getGameWinner(gameState);
   }, [gameState]);
+
+  useEffect(() => {
+    if (!gameState) return;
+
+    /*
+    HIDE IMMEDIATELY
+    WHEN NOT END PHASE
+  */
+    if (gameState.currentPhase !== "end") {
+      setShowWinnerBanner(false);
+
+      return;
+    }
+
+    /*
+    SHOW BANNER
+  */
+    setShowWinnerBanner(true);
+
+    /*
+    AUTO HIDE
+  */
+    const timeout = setTimeout(() => {
+      setShowWinnerBanner(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timeout);
+
+      setShowWinnerBanner(false);
+    };
+  }, [gameState?.currentPhase]);
 
   if (!gameState) return null;
 
@@ -221,14 +255,102 @@ export default function Board({ onReturnToMenu }: Props) {
         {/* BOARD */}
         <div
           className="
-            flex
-            flex-1
-            items-center
-            justify-center
-
-            min-h-0
-          "
+    relative
+    flex
+    flex-1
+    items-center
+    justify-center
+    min-h-0
+  "
         >
+          {showWinnerBanner && (
+            <div
+              className="
+      pointer-events-none
+      absolute
+      left-1/2
+      top-1/2
+      z-30
+      w-full
+
+      -translate-x-1/2
+      -translate-y-1/2
+
+      animate-[fadeIn_.35s_ease]
+
+      overflow-hidden
+
+      border
+      border-white/10
+
+      bg-white/[0.06]
+      backdrop-blur-2xl
+
+      shadow-[0_20px_80px_rgba(0,0,0,0.55)]
+    "
+            >
+              {/* BACKGROUND EFFECTS */}
+              <div
+                className={`
+        absolute
+        -top-10
+        left-1/2
+        h-[140px]
+        w-[140px]
+        -translate-x-1/2
+        rounded-full
+        blur-3xl
+
+        ${
+          winner === "player1"
+            ? "bg-cyan-500/20"
+            : winner === "player2"
+              ? "bg-red-500/20"
+              : "bg-yellow-500/20"
+        }
+      `}
+              />
+
+              <div className="relative z-10 px-4 py-3 text-center">
+                {/* SMALL LABEL */}
+                <div
+                  className="
+          text-[10px]
+          font-bold
+          uppercase
+          tracking-[0.35em]
+          text-zinc-400
+        "
+                >
+                  Match Complete
+                </div>
+
+                {/* MAIN RESULT */}
+                <div
+                  className={`
+          text-3xl
+          font-black
+          uppercase
+          tracking-[0.18em]
+
+          ${
+            winner === "player1"
+              ? "text-cyan-200"
+              : winner === "player2"
+                ? "text-red-200"
+                : "text-yellow-200"
+          }
+        `}
+                >
+                  {winner === "player1"
+                    ? "Victory"
+                    : winner === "player2"
+                      ? "Defeat"
+                      : "Draw"}
+                </div>
+              </div>
+            </div>
+          )}
           <BoardLanes
             lanes={gameState.lanes}
             laneRefs={laneRefs}

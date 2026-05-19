@@ -4,7 +4,7 @@ import type { TouchEvent } from "react";
 
 import type { Card } from "@/engine/types/types";
 
-import GameCard from "../game/GameCard";
+import GameCard from "../GameCard";
 
 type Props = {
   cards: Card[];

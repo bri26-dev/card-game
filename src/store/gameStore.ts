@@ -156,6 +156,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     const nextState = structuredClone(gameState);
 
+    // clear player's cards so enemy always wins
+    nextState.players.player1.board = {
+      lane1: [],
+      lane2: [],
+      lane3: [],
+    };
+
     nextState.currentPhase = "end";
 
     set({
