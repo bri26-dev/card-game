@@ -89,15 +89,23 @@ export default function MainMenu({
           w-full
           max-w-md
           flex-col
-          gap-4
-          px-4
-          pb-28
-          pt-4
+          gap-3
+
+          px-3
+          pb-24
+          pt-3
+
+          sm:gap-4
+          sm:px-4
+          sm:pb-28
+          sm:pt-4
         "
       >
         <Profile account={account} />
 
-        <Hero onPlay={onPlay} />
+        <div className="min-h-0 flex-1">
+          <Hero onPlay={onPlay} />
+        </div>
       </div>
 
       <Navigation
