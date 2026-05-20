@@ -2,6 +2,8 @@
 
 "use client";
 
+import { Swords, Users } from "lucide-react";
+
 type Props = {
   onPlay: () => void;
 };
@@ -72,7 +74,6 @@ export default function Hero({ onPlay }: Props) {
           flex
           h-full
           flex-col
-          text-center
         "
       >
         {/* TAG */}
@@ -97,12 +98,12 @@ export default function Hero({ onPlay }: Props) {
               sm:tracking-[0.22em]
             "
           >
-            Featured Arena
+            Featured Modes
           </div>
         </div>
 
         {/* TITLE */}
-        <div className="mt-3 sm:mt-4">
+        <div className="mt-3 text-center sm:mt-4">
           <div
             className="
               text-4xl
@@ -139,6 +140,7 @@ export default function Hero({ onPlay }: Props) {
         <div
           className="
             mt-2
+            text-center
             text-xs
             leading-relaxed
             text-zinc-400
@@ -147,119 +149,187 @@ export default function Hero({ onPlay }: Props) {
             sm:text-sm
           "
         >
-          Build powerful decks and dominate strategic lane battles.
+          Choose a mode and enter tactical lane combat.
         </div>
 
-        {/* STATS */}
-        <div className="mt-3 flex flex-wrap justify-center gap-2 sm:mt-4">
-          {["PVP", "Strategy", "Cards"].map((item) => (
-            <div
-              key={item}
-              className="
-                rounded-full
-                border
-                border-white/10
-                bg-white/[0.04]
-
-                px-2.5
-                py-1
-
-                text-[9px]
-                font-bold
-                uppercase
-                tracking-[0.12em]
-                text-zinc-300
-
-                sm:px-3
-                sm:py-1.5
-                sm:text-[10px]
-              "
-            >
-              {item}
-            </div>
-          ))}
-        </div>
-
-        {/* VISUAL */}
-        <div
-          className="
-            relative
-            mt-4
-            flex-1
-            min-h-[140px]
-
-            overflow-hidden
-            rounded-[22px]
-
-            border
-            border-white/10
-
-            bg-gradient-to-br
-            from-cyan-500/10
-            via-transparent
-            to-violet-500/10
-
-            sm:mt-5
-            sm:min-h-[220px]
-            sm:rounded-[26px]
-          "
-        />
-
-        {/* BUTTON */}
-        <button
-          onClick={onPlay}
-          className="
-            group
-            relative
-
-            mt-4
-            w-full
-            overflow-hidden
-
-            rounded-[18px]
-            border
-            border-cyan-400/30
-
-            bg-cyan-500/20
-
-            px-5
-            py-3
-
-            text-xs
-            font-black
-            uppercase
-            tracking-[0.16em]
-            text-cyan-100
-
-            transition-all
-
-            hover:scale-[1.02]
-            hover:bg-cyan-500/30
-            active:scale-[0.98]
-
-            sm:mt-5
-            sm:rounded-[22px]
-            sm:py-4
-            sm:text-sm
-            sm:tracking-[0.18em]
-          "
-        >
+        {/* MODES */}
+        <div className="mt-5 grid gap-3">
+          {/* PVP */}
           <div
             className="
-              absolute
-              inset-0
-              bg-gradient-to-r
-              from-transparent
-              via-white/10
-              to-transparent
-              opacity-0
-              transition
-              group-hover:opacity-100
-            "
-          />
+              relative
+              overflow-hidden
 
-          <span className="relative">Enter Battle</span>
-        </button>
+              rounded-[24px]
+              border
+              border-white/10
+
+              bg-white/[0.03]
+
+              p-4
+            "
+          >
+            {/* DISABLED OVERLAY */}
+            <div
+              className="
+                absolute
+                inset-0
+                z-20
+
+                flex
+                items-center
+                justify-center
+
+                bg-black/60
+                backdrop-blur-[2px]
+              "
+            >
+              <div
+                className="
+                  rounded-full
+                  border
+                  border-yellow-400/20
+                  bg-yellow-500/10
+
+                  px-3
+                  py-1
+
+                  text-[10px]
+                  font-black
+                  uppercase
+                  tracking-[0.18em]
+                  text-yellow-200
+                "
+              >
+                Coming Soon
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div
+                className="
+                  flex
+                  h-11
+                  w-11
+                  items-center
+                  justify-center
+
+                  rounded-2xl
+                  bg-red-500/10
+                "
+              >
+                <Swords className="text-red-300" size={20} />
+              </div>
+
+              <div className="flex-1">
+                <div
+                  className="
+                    text-sm
+                    font-black
+                    uppercase
+                    tracking-[0.14em]
+                    text-white
+                  "
+                >
+                  PVP Arena
+                </div>
+
+                <div
+                  className="
+                    mt-1
+                    text-xs
+                    leading-relaxed
+                    text-zinc-400
+                  "
+                >
+                  Battle against online opponents in competitive lane combat.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* COOP */}
+          <button
+            onClick={onPlay}
+            className="
+              group
+              relative
+              overflow-hidden
+
+              rounded-[24px]
+              border
+              border-cyan-400/20
+
+              bg-cyan-500/10
+
+              p-4
+
+              text-left
+              transition-all
+
+              hover:-translate-y-1
+              hover:bg-cyan-500/15
+              active:scale-[0.98]
+            "
+          >
+            {/* HOVER SHINE */}
+            <div
+              className="
+                absolute
+                inset-0
+                bg-gradient-to-r
+                from-transparent
+                via-white/10
+                to-transparent
+                opacity-0
+                transition
+                group-hover:opacity-100
+              "
+            />
+
+            <div className="relative flex items-start gap-3">
+              <div
+                className="
+                  flex
+                  h-11
+                  w-11
+                  items-center
+                  justify-center
+
+                  rounded-2xl
+                  bg-cyan-500/10
+                "
+              >
+                <Users className="text-cyan-200" size={20} />
+              </div>
+
+              <div className="flex-1">
+                <div
+                  className="
+                    text-sm
+                    font-black
+                    uppercase
+                    tracking-[0.14em]
+                    text-cyan-100
+                  "
+                >
+                  Co-op Battle
+                </div>
+
+                <div
+                  className="
+                    mt-1
+                    text-xs
+                    leading-relaxed
+                    text-cyan-50/70
+                  "
+                >
+                  Team up in cooperative battles and take on enemy encounters.
+                </div>
+              </div>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   );

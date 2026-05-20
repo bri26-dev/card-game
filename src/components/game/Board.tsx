@@ -4,6 +4,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { useAccountStore } from "@/store/accountStore";
 import { useGameStore } from "@/store/gameStore";
 
 import type { Card, Lane, LaneKey } from "@/engine/types/types";
@@ -54,6 +55,8 @@ export default function Board({ onReturnToMenu }: Props) {
     canUndo,
   } = useGameStore();
 
+  const account = useAccountStore((state) => state.account);
+
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
   const [selectedLane, setSelectedLane] = useState<PreviewLane | null>(null);
@@ -76,6 +79,8 @@ export default function Board({ onReturnToMenu }: Props) {
 
   const [showWinnerBanner, setShowWinnerBanner] = useState(false);
 
+  const [showTurnBanner, setShowTurnBanner] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   const [showSurrenderConfirm, setShowSurrenderConfirm] = useState(false);
@@ -83,6 +88,8 @@ export default function Board({ onReturnToMenu }: Props) {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   const [loadingText, setLoadingText] = useState("");
+
+  const [showEnergyWarning, setShowEnergyWarning] = useState(false);
 
   const laneRefs = {
     lane1: useRef<HTMLDivElement>(null),
@@ -130,6 +137,45 @@ export default function Board({ onReturnToMenu }: Props) {
 
   if (!gameState) return null;
 
+  useEffect(() => {
+    if (!gameState) return;
+
+    // don't show during end phase
+    if (gameState.currentPhase === "end") {
+      setShowTurnBanner(false);
+
+      return;
+    }
+
+    setShowTurnBanner(true);
+
+    const timeout = setTimeout(() => {
+      setShowTurnBanner(false);
+    }, 1400);
+
+    return () => clearTimeout(timeout);
+  }, [gameState.turn, gameState.currentPhase]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      /*
+      SHOW BROWSER WARNING
+    */
+      event.preventDefault();
+
+      event.returnValue =
+        "Refreshing or leaving the match will forfeit the game and lose your progress.";
+
+      return event.returnValue;
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   const player = gameState.players.player1;
 
   const handleLaneDrop = () => {
@@ -147,6 +193,18 @@ export default function Board({ onReturnToMenu }: Props) {
         touchPosition.y <= rect.bottom;
 
       if (insideLane) {
+        const draggedCard = player.hand[draggingIndex];
+
+        if (draggedCard.cost > player.energy) {
+          setShowEnergyWarning(true);
+
+          setTimeout(() => {
+            setShowEnergyWarning(false);
+          }, 1200);
+
+          break;
+        }
+
         playCard("player1", draggingIndex, lane.id);
 
         break;
@@ -262,7 +320,17 @@ export default function Board({ onReturnToMenu }: Props) {
           sm:gap-3
         "
       >
-        <Header turn={gameState.turn} energy={player.energy} />
+        <Header
+          energy={player.energy}
+          insufficientEnergy={showEnergyWarning}
+          player={{
+            name: account?.username || "Player",
+          }}
+          opponent={{
+            name: "Arena Bot",
+            isAI: true,
+          }}
+        />
 
         {/* BOARD */}
         <div
@@ -275,6 +343,78 @@ export default function Board({ onReturnToMenu }: Props) {
     min-h-0
   "
         >
+          {showTurnBanner && gameState.currentPhase !== "end" && (
+            <div
+              className="
+      pointer-events-none
+      absolute
+      left-1/2
+      top-1/2
+      z-20
+      w-full
+
+      -translate-x-1/2
+      -translate-y-1/2
+
+      overflow-hidden
+
+      border
+      border-cyan-400/10
+
+      bg-white/[0.06]
+      backdrop-blur-2xl
+
+      shadow-[0_20px_80px_rgba(0,0,0,0.55)]
+
+      transition-all
+      duration-300
+    "
+            >
+              {/* glow */}
+              <div
+                className="
+        absolute
+        -top-10
+        left-1/2
+
+        h-[140px]
+        w-[140px]
+
+        -translate-x-1/2
+
+        rounded-full
+
+        bg-cyan-500/20
+        blur-3xl
+      "
+              />
+
+              <div className="relative z-10 px-4 py-3 text-center">
+                <div
+                  className="
+          text-3xl
+          font-black
+          italic
+          uppercase
+          tracking-[0.18em]
+
+          bg-gradient-to-b
+          from-white
+          via-cyan-100
+          to-cyan-400
+
+          bg-clip-text
+          text-transparent
+
+          drop-shadow-[0_0_18px_rgba(34,211,238,.75)]
+        "
+                >
+                  TURN {gameState.turn}
+                </div>
+              </div>
+            </div>
+          )}
+
           {showWinnerBanner && (
             <div
               className="
@@ -282,7 +422,7 @@ export default function Board({ onReturnToMenu }: Props) {
       absolute
       left-1/2
       top-1/2
-      z-30
+      z-50
       w-full
 
       -translate-x-1/2
@@ -492,7 +632,7 @@ export default function Board({ onReturnToMenu }: Props) {
           text-zinc-500
         "
               >
-                Loading...
+                Returning to Main Menu...
               </div>
             </div>
           ) : (
@@ -524,12 +664,12 @@ export default function Board({ onReturnToMenu }: Props) {
           onConfirm={() => {
             setShowExitConfirm(false);
 
+            setLoadingText("simple");
+
             setLoading(true);
 
             setTimeout(() => {
               onReturnToMenu?.();
-
-              setLoading(false);
             }, 700);
           }}
         />

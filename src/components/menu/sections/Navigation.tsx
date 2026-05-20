@@ -2,11 +2,9 @@
 
 "use client";
 
-import { Play, Layers3, LibraryBig, LogOut } from "lucide-react";
+import { Swords, Layers3, LibraryBig, LogOut } from "lucide-react";
 
 type Props = {
-  onPlay: () => void;
-
   onDecks: () => void;
 
   onCollection: () => void;
@@ -14,12 +12,7 @@ type Props = {
   onLogout: () => void;
 };
 
-export default function Navigation({
-  onPlay,
-  onDecks,
-  onCollection,
-  onLogout,
-}: Props) {
+export default function Navigation({ onDecks, onCollection, onLogout }: Props) {
   return (
     <div
       className="
@@ -73,37 +66,30 @@ export default function Navigation({
           />
 
           <div className="grid grid-cols-4 gap-2">
-            {/* PLAY */}
-            <button
-              onClick={onPlay}
+            {/* PLAY MENU */}
+            <div
               className="
                 group
                 relative
                 overflow-hidden
                 rounded-[24px]
-                bg-gradient-to-b
-                from-cyan-400/25
-                to-cyan-500/10
+                border
+                border-cyan-400/15
+                bg-cyan-500/[0.06]
                 px-3
                 py-3
-                transition-all
-                hover:-translate-y-1
-                hover:scale-[1.03]
               "
             >
               <div
                 className="
                   absolute
                   inset-0
-                  bg-cyan-400/10
-                  opacity-0
-                  transition-all
-                  group-hover:opacity-100
+                  bg-cyan-400/5
                 "
               />
 
               <div className="relative flex flex-col items-center">
-                <Play size={20} className="text-cyan-200" fill="currentColor" />
+                <Swords size={20} className="text-cyan-200" />
 
                 <span
                   className="
@@ -115,10 +101,10 @@ export default function Navigation({
                     text-cyan-100
                   "
                 >
-                  Play
+                  Battle
                 </span>
               </div>
-            </button>
+            </div>
 
             {/* DECKS */}
             <button
@@ -202,7 +188,7 @@ export default function Navigation({
               </div>
             </button>
 
-            {/* QUIT */}
+            {/* LOGOUT */}
             <button
               onClick={onLogout}
               className="

@@ -32,9 +32,13 @@ export default function MainMenu({
 }: Props) {
   const [loading, setLoading] = useState(false);
 
+  const [loadingType, setLoadingType] = useState<"play" | "logout">("play");
+
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const handlePlay = () => {
+    setLoadingType("play");
+
     setLoading(true);
 
     setTimeout(() => {
@@ -51,6 +55,8 @@ export default function MainMenu({
   const confirmLogout = () => {
     setShowLogoutConfirm(false);
 
+    setLoadingType("logout");
+
     setLoading(true);
 
     setTimeout(() => {
@@ -62,7 +68,35 @@ export default function MainMenu({
 
   return (
     <>
-      {loading && <LoadingScreen text="Entering Arena..." />}
+      {loading &&
+        (loadingType === "logout" ? (
+          <div
+            className="
+        fixed
+        inset-0
+        z-[200]
+        flex
+        items-center
+        justify-center
+        bg-[#05070d]
+      "
+          >
+            <div
+              className="
+          animate-pulse
+          text-sm
+          font-medium
+          uppercase
+          tracking-[0.3em]
+          text-zinc-500
+        "
+            >
+              Logging Out...
+            </div>
+          </div>
+        ) : (
+          <LoadingScreen text="Entering Arena..." />
+        ))}
 
       <ConfirmModal
         open={showLogoutConfirm}
@@ -156,7 +190,6 @@ export default function MainMenu({
         </div>
 
         <Navigation
-          onPlay={handlePlay}
           onDecks={onDecks}
           onCollection={onCollection}
           onLogout={handleLogout}

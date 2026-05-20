@@ -82,7 +82,7 @@ export default function LoadingScreen({ text = "Preparing Battle..." }: Props) {
             text-zinc-400
           "
         >
-          Synchronizing arena systems...
+          Getting everything ready...
         </div>
 
         {/* LOADING BAR */}

@@ -151,7 +151,7 @@ export default function GameLane({
             absolute
             left-1/2
             top-2
-            z-50
+            z-1
             flex
             h-6
             min-w-[34px]
