@@ -1,3 +1,5 @@
+// components/menu/MainMenu.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -72,24 +74,24 @@ export default function MainMenu({
         (loadingType === "logout" ? (
           <div
             className="
-        fixed
-        inset-0
-        z-[200]
-        flex
-        items-center
-        justify-center
-        bg-[#05070d]
-      "
+              fixed
+              inset-0
+              z-[200]
+              flex
+              items-center
+              justify-center
+              bg-[#05070d]
+            "
           >
             <div
               className="
-          animate-pulse
-          text-sm
-          font-medium
-          uppercase
-          tracking-[0.3em]
-          text-zinc-500
-        "
+                animate-pulse
+                text-sm
+                font-medium
+                uppercase
+                tracking-[0.3em]
+                text-zinc-500
+              "
             >
               Logging Out...
             </div>
@@ -131,32 +133,6 @@ export default function MainMenu({
               [background-size:34px_34px]
             "
           />
-
-          <div
-            className="
-              absolute
-              left-[-120px]
-              top-[5%]
-              h-[220px]
-              w-[220px]
-              rounded-full
-              bg-cyan-500/10
-              blur-3xl
-            "
-          />
-
-          <div
-            className="
-              absolute
-              bottom-[-100px]
-              right-[-80px]
-              h-[220px]
-              w-[220px]
-              rounded-full
-              bg-violet-500/10
-              blur-3xl
-            "
-          />
         </div>
 
         {/* CONTENT */}
@@ -171,15 +147,9 @@ export default function MainMenu({
             max-w-md
             flex-col
             gap-3
-
             px-3
             pb-24
             pt-3
-
-            sm:gap-4
-            sm:px-4
-            sm:pb-28
-            sm:pt-4
           "
         >
           <Profile account={account} />
@@ -190,6 +160,8 @@ export default function MainMenu({
         </div>
 
         <Navigation
+          active="battle"
+          onBattle={() => {}}
           onDecks={onDecks}
           onCollection={onCollection}
           onLogout={handleLogout}

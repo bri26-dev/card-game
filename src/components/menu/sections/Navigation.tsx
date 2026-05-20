@@ -5,228 +5,212 @@
 import { Swords, Layers3, LibraryBig, LogOut } from "lucide-react";
 
 type Props = {
+  onBattle: () => void;
+
   onDecks: () => void;
 
   onCollection: () => void;
 
   onLogout: () => void;
+
+  active?: "battle" | "decks" | "collection";
 };
 
-export default function Navigation({ onDecks, onCollection, onLogout }: Props) {
-  return (
-    <div
-      className="
-        fixed
-        bottom-4
-        left-0
-        right-0
-        z-40
-        px-4
-      "
-    >
-      <div className="relative mx-auto max-w-lg">
-        {/* AMBIENT GLOW */}
-        <div
-          className="
-            absolute
-            inset-x-16
-            bottom-0
-            h-20
-            rounded-full
-            bg-cyan-500/10
-            blur-3xl
-          "
-        />
+export default function Navigation({
+  onBattle,
+  onDecks,
+  onCollection,
+  onLogout,
+  active,
+}: Props) {
+  const item = (isActive: boolean) => `
+    relative
+    flex
+    flex-col
+    items-center
+    justify-center
+    rounded-2xl
+    border
+    px-2
+    py-2.5
+    transition-all
+    duration-200
 
+    ${
+      isActive
+        ? `
+          border-cyan-400/30
+          bg-cyan-500/10
+          shadow-[0_0_20px_rgba(34,211,238,0.15)]
+        `
+        : `
+          border-white/5
+          bg-white/[0.03]
+        `
+    }
+  `;
+
+  return (
+    <div className="fixed bottom-3 left-0 right-0 z-50 px-3">
+      <div className="mx-auto max-w-md">
         <div
           className="
-            relative
             overflow-hidden
-            rounded-[32px]
+            rounded-[28px]
             border
             border-white/10
             bg-[#0b1018]/90
-            p-2
-            shadow-[0_15px_60px_rgba(0,0,0,0.5)]
+            p-1.5
+            shadow-[0_10px_40px_rgba(0,0,0,0.45)]
             backdrop-blur-2xl
           "
         >
-          {/* TOP SHINE */}
-          <div
-            className="
-              absolute
-              inset-x-0
-              top-0
-              h-px
-              bg-gradient-to-r
-              from-transparent
-              via-cyan-400/50
-              to-transparent
-            "
-          />
-
-          <div className="grid grid-cols-4 gap-2">
-            {/* PLAY MENU */}
-            <div
-              className="
-                group
-                relative
-                overflow-hidden
-                rounded-[24px]
-                border
-                border-cyan-400/15
-                bg-cyan-500/[0.06]
-                px-3
-                py-3
-              "
-            >
-              <div
-                className="
-                  absolute
-                  inset-0
-                  bg-cyan-400/5
-                "
-              />
-
-              <div className="relative flex flex-col items-center">
-                <Swords size={20} className="text-cyan-200" />
-
-                <span
+          <div className="grid grid-cols-4 gap-1.5">
+            {/* BATTLE */}
+            <button onClick={onBattle} className={item(active === "battle")}>
+              {active === "battle" && (
+                <div
                   className="
-                    mt-1
-                    text-[10px]
-                    font-black
-                    uppercase
-                    tracking-[0.14em]
-                    text-cyan-100
-                  "
-                >
-                  Battle
-                </span>
-              </div>
-            </div>
-
-            {/* DECKS */}
-            <button
-              onClick={onDecks}
-              className="
-                group
-                rounded-[24px]
-                border
-                border-white/8
-                bg-white/[0.03]
-                px-3
-                py-3
-                transition-all
-                hover:-translate-y-1
-                hover:bg-white/[0.06]
-              "
-            >
-              <div className="flex flex-col items-center">
-                <Layers3
-                  size={20}
-                  className="
-                    text-zinc-300
-                    transition-all
-                    group-hover:text-white
+                    absolute
+                    inset-x-3
+                    top-1
+                    h-[2px]
+                    rounded-full
+                    bg-cyan-300
                   "
                 />
+              )}
 
-                <span
+              <Swords
+                size={18}
+                className={
+                  active === "battle" ? "text-cyan-200" : "text-zinc-400"
+                }
+              />
+
+              <span
+                className={`
+                  mt-1
+                  text-[9px]
+                  font-black
+                  uppercase
+                  tracking-[0.12em]
+
+                  ${active === "battle" ? "text-cyan-100" : "text-zinc-400"}
+                `}
+              >
+                Battle
+              </span>
+            </button>
+
+            {/* DECKS */}
+            <button onClick={onDecks} className={item(active === "decks")}>
+              {active === "decks" && (
+                <div
                   className="
-                    mt-1
-                    text-[10px]
-                    font-black
-                    uppercase
-                    tracking-[0.14em]
-                    text-zinc-300
+                    absolute
+                    inset-x-3
+                    top-1
+                    h-[2px]
+                    rounded-full
+                    bg-cyan-300
                   "
-                >
-                  Decks
-                </span>
-              </div>
+                />
+              )}
+
+              <Layers3
+                size={18}
+                className={
+                  active === "decks" ? "text-cyan-200" : "text-zinc-400"
+                }
+              />
+
+              <span
+                className={`
+                  mt-1
+                  text-[9px]
+                  font-black
+                  uppercase
+                  tracking-[0.12em]
+
+                  ${active === "decks" ? "text-cyan-100" : "text-zinc-400"}
+                `}
+              >
+                Decks
+              </span>
             </button>
 
             {/* COLLECTION */}
             <button
               onClick={onCollection}
-              className="
-                group
-                rounded-[24px]
-                border
-                border-white/8
-                bg-white/[0.03]
-                px-3
-                py-3
-                transition-all
-                hover:-translate-y-1
-                hover:bg-white/[0.06]
-              "
+              className={item(active === "collection")}
             >
-              <div className="flex flex-col items-center">
-                <LibraryBig
-                  size={20}
+              {active === "collection" && (
+                <div
                   className="
-                    text-zinc-300
-                    transition-all
-                    group-hover:text-white
+                    absolute
+                    inset-x-3
+                    top-1
+                    h-[2px]
+                    rounded-full
+                    bg-cyan-300
                   "
                 />
+              )}
 
-                <span
-                  className="
-                    mt-1
-                    text-[10px]
-                    font-black
-                    uppercase
-                    tracking-[0.14em]
-                    text-zinc-300
-                  "
-                >
-                  Cards
-                </span>
-              </div>
+              <LibraryBig
+                size={18}
+                className={
+                  active === "collection" ? "text-cyan-200" : "text-zinc-400"
+                }
+              />
+
+              <span
+                className={`
+                  mt-1
+                  text-[9px]
+                  font-black
+                  uppercase
+                  tracking-[0.12em]
+
+                  ${active === "collection" ? "text-cyan-100" : "text-zinc-400"}
+                `}
+              >
+                Cards
+              </span>
             </button>
 
             {/* LOGOUT */}
             <button
               onClick={onLogout}
               className="
-                group
-                rounded-[24px]
+                flex
+                flex-col
+                items-center
+                justify-center
+                rounded-2xl
                 border
                 border-red-500/10
-                bg-red-500/[0.08]
-                px-3
-                py-3
+                bg-red-500/[0.06]
+                px-2
+                py-2.5
                 transition-all
-                hover:-translate-y-1
-                hover:bg-red-500/[0.15]
               "
             >
-              <div className="flex flex-col items-center">
-                <LogOut
-                  size={20}
-                  className="
-                    text-red-300
-                    transition-all
-                    group-hover:text-red-200
-                  "
-                />
+              <LogOut size={18} className="text-red-300" />
 
-                <span
-                  className="
-                    mt-1
-                    text-[10px]
-                    font-black
-                    uppercase
-                    tracking-[0.14em]
-                    text-red-200
-                  "
-                >
-                  Quit
-                </span>
-              </div>
+              <span
+                className="
+                  mt-1
+                  text-[9px]
+                  font-black
+                  uppercase
+                  tracking-[0.12em]
+                  text-red-200
+                "
+              >
+                Quit
+              </span>
             </button>
           </div>
         </div>

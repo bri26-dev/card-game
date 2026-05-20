@@ -21,6 +21,8 @@ import { recalculatePower } from "@/engine/core/powerSystem";
 
 import { prepareNextTurn, resolveTurn } from "@/engine/core/gameFlow";
 
+import { useDeckStore } from "./deckStore";
+
 interface GameStore {
   gameState: GameState | null;
 
@@ -58,9 +60,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
   history: [],
 
   initializeGame: () => {
-    const playerOneDeck = shuffle(structuredClone(starterCards));
+    const selectedDeck = useDeckStore.getState().getSelectedDeck();
 
-    const playerTwoDeck = shuffle(structuredClone(starterCards));
+    const cards = selectedDeck?.cards?.length
+      ? selectedDeck.cards
+      : starterCards;
+
+    const playerOneDeck = shuffle(structuredClone(cards));
+
+    const playerTwoDeck = shuffle(structuredClone(cards));
 
     const gameState = createGameState(playerOneDeck, playerTwoDeck);
 

@@ -1,17 +1,17 @@
-// app/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
 
 import Board from "@/components/game/Board";
+
 import Login from "@/components/menu/Login";
 import MainMenu from "@/components/menu/MainMenu";
 
+import DeckPage from "@/components/decks/DeckPage";
+import CollectionPage from "@/components/collection/CollectionPage";
+
 import { useAccountStore } from "@/store/accountStore";
 import { useGameStore } from "@/store/gameStore";
-
-import LoadingScreen from "@/components/ui/LoadingScreen";
 
 export default function Home() {
   const initializeGame = useGameStore((state) => state.initializeGame);
@@ -29,7 +29,9 @@ export default function Home() {
     clearAuthSuccess,
   } = useAccountStore();
 
-  const [started, setStarted] = useState(false);
+  const [screen, setScreen] = useState<
+    "menu" | "game" | "decks" | "collection"
+  >("menu");
 
   useEffect(() => {
     loadAccount();
@@ -37,25 +39,8 @@ export default function Home() {
 
   if (loading) {
     return (
-      <main
-        className="
-        flex
-        min-h-screen
-        items-center
-        justify-center
-        bg-[#05070d]
-      "
-      >
-        <div
-          className="
-          animate-pulse
-          text-sm
-          font-medium
-          uppercase
-          tracking-[0.3em]
-          text-zinc-500
-        "
-        >
+      <main className="flex min-h-screen items-center justify-center bg-[#05070d]">
+        <div className="animate-pulse text-sm uppercase tracking-[0.3em] text-zinc-500">
           Loading...
         </div>
       </main>
@@ -76,36 +61,64 @@ export default function Home() {
   }
 
   return (
-    <main
-      className="
-        relative
-        flex
-        h-screen
-        flex-col
-        overflow-hidden
-      "
-    >
-      {!started ? (
+    <main className="relative h-screen overflow-hidden">
+      {/* MENU */}
+      {screen === "menu" && (
         <MainMenu
           account={account}
           onPlay={() => {
             initializeGame();
 
-            setStarted(true);
+            setScreen("game");
           }}
           onLogout={logout}
           onDecks={() => {
-            alert("Deck Builder Coming Soon");
+            setScreen("decks");
           }}
           onCollection={() => {
-            alert("Collection Coming Soon");
+            setScreen("collection");
           }}
         />
-      ) : (
+      )}
+
+      {/* GAME */}
+      {screen === "game" && (
         <Board
           onReturnToMenu={() => {
-            setStarted(false);
+            setScreen("menu");
           }}
+        />
+      )}
+
+      {/* DECKS */}
+      {screen === "decks" && (
+        <DeckPage
+          onBattle={() => {
+            setScreen("menu");
+          }}
+          onDecks={() => {
+            setScreen("decks");
+          }}
+          onCollection={() => {
+            setScreen("collection");
+          }}
+          onLogout={logout}
+        />
+      )}
+
+      {/* COLLECTION */}
+      {screen === "collection" && (
+        <CollectionPage
+          onBattle={() => {
+            setScreen("menu");
+          }}
+          onDecks={() => {
+            setScreen("decks");
+          }}
+          onCollection={() => {
+            setScreen("collection");
+          }}
+          onLogout={logout}
         />
       )}
     </main>

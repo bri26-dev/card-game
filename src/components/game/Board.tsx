@@ -22,8 +22,8 @@ import ActionBar from "./sections/ActionBar";
 
 import GameCard from "./GameCard";
 
-import CardPreview from "../preview/CardPreview";
-import LanePreview from "../preview/LanePreview";
+import CardPreview from "./preview/CardPreview";
+import LanePreview from "./preview/LanePreview";
 
 import LoadingScreen from "@/components/ui/LoadingScreen";
 

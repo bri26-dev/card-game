@@ -13,6 +13,8 @@ type Props = {
     image?: string;
   };
 
+  compact?: boolean;
+
   selected?: boolean;
 
   onClick?: () => void;
@@ -26,6 +28,7 @@ type Props = {
 
 export default function GameCard({
   card,
+  compact = false,
   selected,
   onClick,
   onTouchStart,
@@ -49,12 +52,25 @@ export default function GameCard({
       className={`
         group
         relative
-        h-[104px]
-        w-[74px]
         overflow-hidden
         rounded-[18px]
+        border
+        border-white/10
+        bg-[#111827]
         transition-all
         duration-150
+
+        ${
+          compact
+            ? `
+              h-[82px]
+              w-[58px]
+            `
+            : `
+              h-[104px]
+              w-[74px]
+            `
+        }
 
         ${
           selected
@@ -76,11 +92,11 @@ export default function GameCard({
           src={card.image || "/assets/cards/fallback.png"}
           alt={card.name}
           fill
-          sizes="74px"
+          sizes={compact ? "58px" : "74px"}
           className="
-    object-cover
-    pixelated
-  "
+            object-cover
+            pixelated
+          "
         />
 
         <div
@@ -97,25 +113,35 @@ export default function GameCard({
 
       {/* COST */}
       <div
-        className="
+        className={`
           absolute
           left-1.5
           top-1.5
           z-20
           flex
-          h-5
-          w-5
           items-center
           justify-center
-          rounded-[10px]
+          rounded-full
           border
           border-cyan-200/20
           bg-[#4d8fff]
-          text-[10px]
           font-black
           text-white
-          shadow-[0_0_12px_rgba(80,120,255,0.45)]
-        "
+
+          ${
+            compact
+              ? `
+                h-4
+                w-4
+                text-[8px]
+              `
+              : `
+                h-5
+                w-5
+                text-[10px]
+              `
+          }
+        `}
       >
         {card.cost}
       </div>
@@ -124,19 +150,30 @@ export default function GameCard({
       <div
         className={`
           absolute
-          top-1.5
           right-1.5
+          top-1.5
           z-20
           flex
-          h-5
-          w-5
           items-center
           justify-center
-          rounded-[10px]
+          rounded-full
           border
-          text-[10px]
           font-black
           text-white
+
+          ${
+            compact
+              ? `
+                h-4
+                w-4
+                text-[8px]
+              `
+              : `
+                h-5
+                w-5
+                text-[10px]
+              `
+          }
 
           ${
             isBuffed
@@ -151,25 +188,18 @@ export default function GameCard({
       </div>
 
       {/* NAME */}
-      <div
-        className="
-          absolute
-          bottom-1.5
-          left-1
-          right-1
-          z-10
-        "
-      >
+      <div className="absolute bottom-1 left-1 right-1 z-10">
         <div
-          className="
+          className={`
+            truncate
             text-center
-            text-[10px]
             font-black
             uppercase
-            tracking-[0.08em]
+            tracking-[0.06em]
             text-white
-            drop-shadow-[0_2px_0_rgba(0,0,0,0.7)]
-          "
+
+            ${compact ? "text-[7px]" : "text-[10px]"}
+          `}
         >
           {card.name}
         </div>
